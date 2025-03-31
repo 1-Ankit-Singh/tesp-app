@@ -31,4 +31,5 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_TOKEN }}'
           channelId: live # or your channel id, for preview channels use preview channel id.
           projectId: quickshop-1b8b2 # Replace with your Firebase project ID
-          entryPoint: 'dist/tesp-app/browser' # entry point based on your structure
+          entryPoint: 'dist/tesp-app/browser'
+          workingDirectory: '.' # Explicitly set the working directory to the root
