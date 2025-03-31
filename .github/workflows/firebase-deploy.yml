@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build Angular app
-        run: npm run build -- --configuration production # Corrected build command
+        run: npm run build -- --configuration production
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -30,5 +30,5 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_TOKEN }}'
           channelId: live # or your channel id, for preview channels use preview channel id.
-          projectId: your-firebase-project-id # Replace with your Firebase project ID
-          entryPoint: 'dist/tesp-app/browser' # Corrected entryPoint
+          projectId: quickshop-1b8b2 # Replace with your Firebase project ID
+          entryPoint: 'dist/tesp-app/browser' # entry point based on your structure
