@@ -24,6 +24,9 @@ jobs:
       - name: Build Angular app
         run: npm run build -- --configuration production
 
+      - name: Clean build directory
+        run: rm -rf dist/tesp-app # remove the build folder
+
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -32,4 +35,4 @@ jobs:
           channelId: live # or your channel id, for preview channels use preview channel id.
           projectId: quickshop-1b8b2 # Replace with your Firebase project ID
           entryPoint: 'dist/tesp-app/browser'
-          workingDirectory: '.' # Explicitly set the working directory to the root
+          firebaseJsonPath: './firebase.json' # Explicitly specify the path
