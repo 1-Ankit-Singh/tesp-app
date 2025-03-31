@@ -31,4 +31,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_TOKEN }}'
           channelId: live # or your channel id, for preview channels use preview channel id.
           projectId: your-firebase-project-id # Replace with your Firebase project ID
-          entryPoint: './build' # or the path to your build folder
+          entryPoint: 'dist/tesp-app/browser' # Corrected entryPoint
