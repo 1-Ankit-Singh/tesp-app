@@ -10,7 +10,7 @@ import {
   doc,
   collectionData,
 } from '@angular/fire/firestore';
-import { Storage, ref, uploadBytesResumable, getDownloadURL, StorageReference } from '@angular/fire/storage';
+import { Storage, ref,listAll, deleteObject, uploadBytesResumable, getDownloadURL, StorageReference } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -91,8 +91,47 @@ export class ProductService {
     }
   }
 
+  // async deleteProduct(id: string): Promise<void> {
+  //   await this.runInContext(() => deleteDoc(doc(this.productsCollection, id)));
+  // }
+
   async deleteProduct(id: string): Promise<void> {
-    await this.runInContext(() => deleteDoc(doc(this.productsCollection, id)));
+    try {
+      // 1. Delete Firestore Document
+      await this.runInContext(() => deleteDoc(doc(this.productsCollection, id)));
+      console.log(`Firestore document with ID ${id} deleted.`);
+
+      // 2. Delete Corresponding Folder in Storage
+      const storageRef = ref(this.storage, `products/${id}`);
+      const listResult = await listAll(storageRef);
+
+      // Delete all files in the folder
+      const deletePromises = listResult.items.map(async (item) => {
+        await deleteObject(item);
+        console.log(`Storage file ${item.name} in folder ${id} deleted.`);
+      });
+
+      // Wait for all files to be deleted
+      await Promise.all(deletePromises);
+      console.log(`Storage folder 'products/${id}' and its contents deleted.`);
+    } catch (error) {
+      console.error('Error deleting product and associated storage:', error);
+      throw error;
+    }
+  }
+
+  async deleteImage(imageUrl: string): Promise<void> {
+    try {
+      // Create a reference to the image file using its URL
+      const storageRef = ref(this.storage, imageUrl);
+
+      // Delete the object
+      await deleteObject(storageRef);
+      console.log(`Image at ${imageUrl} deleted from Storage.`);
+    } catch (error) {
+      console.error('Error deleting image from Storage:', error);
+      throw error;
+    }
   }
 
   private runInContext<T>(callback: () => T): T {
