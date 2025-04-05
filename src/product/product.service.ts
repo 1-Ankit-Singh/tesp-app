@@ -10,7 +10,15 @@ import {
   doc,
   collectionData,
 } from '@angular/fire/firestore';
-import { Storage, ref,listAll, deleteObject, uploadBytesResumable, getDownloadURL, StorageReference } from '@angular/fire/storage';
+import {
+  Storage,
+  ref,
+  listAll,
+  deleteObject,
+  uploadBytesResumable,
+  getDownloadURL,
+  StorageReference,
+} from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -18,18 +26,27 @@ import { Storage, ref,listAll, deleteObject, uploadBytesResumable, getDownloadUR
 export class ProductService {
   private productsCollection;
 
-  constructor(private firestore: Firestore, private storage: Storage, private injector: Injector) {
+  constructor(
+    private firestore: Firestore,
+    private storage: Storage,
+    private injector: Injector
+  ) {
     this.productsCollection = collection(this.firestore, 'products');
   }
 
   getProducts(): Observable<Product[]> {
     return collectionData(this.productsCollection, { idField: 'id' }).pipe(
-      map((data) => data.map((doc: any) => ({
-        id: doc.id,
-        productName: doc.productName,
-        description: doc.description,
-        images: doc.images,
-      }) as Product)),
+      map((data) =>
+        data.map(
+          (doc: any) =>
+            ({
+              id: doc.id,
+              productName: doc.productName,
+              description: doc.description,
+              images: doc.images,
+            } as Product)
+        )
+      ),
       catchError((error) => {
         console.error('Error fetching products:', error);
         return throwError(() => error);
@@ -37,13 +54,19 @@ export class ProductService {
     );
   }
 
-  async addProduct(product: Product, selectedFiles: File[], imageSequences: number[]): Promise<void> {
+  async addProduct(
+    product: Product,
+    selectedFiles: File[],
+    imageSequences: number[]
+  ): Promise<void> {
     const sortedFiles = selectedFiles
       .map((file, index) => ({ file, sequence: imageSequences[index] }))
       .sort((a, b) => a.sequence - b.sequence)
-      .map(item => item.file);
+      .map((item) => item.file);
 
-    let productDocRef = await this.runInContext(() => addDoc(this.productsCollection, product));
+    let productDocRef = await this.runInContext(() =>
+      addDoc(this.productsCollection, product)
+    );
 
     const imageUrls = await Promise.all(
       sortedFiles.map(async (file) => {
@@ -54,11 +77,16 @@ export class ProductService {
     );
 
     await this.runInContext(() =>
-      updateDoc(doc(this.firestore, 'products', productDocRef.id), { images: imageUrls })
+      updateDoc(doc(this.firestore, 'products', productDocRef.id), {
+        images: imageUrls,
+      })
     );
   }
 
-  private async uploadAndGetUrl(fileRef: StorageReference, file: File): Promise<string> {
+  private async uploadAndGetUrl(
+    fileRef: StorageReference,
+    file: File
+  ): Promise<string> {
     return new Promise((resolve, reject) => {
       this.runInContext(() => {
         const uploadTask = uploadBytesResumable(fileRef, file);
@@ -68,7 +96,9 @@ export class ProductService {
           (error) => reject(error),
           async () => {
             try {
-              const downloadURL = await this.runInContext(() => getDownloadURL(fileRef));
+              const downloadURL = await this.runInContext(() =>
+                getDownloadURL(fileRef)
+              );
               resolve(downloadURL);
             } catch (error) {
               reject(error);
@@ -98,7 +128,9 @@ export class ProductService {
   async deleteProduct(id: string): Promise<void> {
     try {
       // 1. Delete Firestore Document
-      await this.runInContext(() => deleteDoc(doc(this.productsCollection, id)));
+      await this.runInContext(() =>
+        deleteDoc(doc(this.productsCollection, id))
+      );
       console.log(`Firestore document with ID ${id} deleted.`);
 
       // 2. Delete Corresponding Folder in Storage
@@ -135,6 +167,6 @@ export class ProductService {
   }
 
   private runInContext<T>(callback: () => T): T {
-      return runInInjectionContext(this.injector, callback);
+    return runInInjectionContext(this.injector, callback);
   }
 }

@@ -1,46 +1,45 @@
 <div>
-    <h1>Test App</h1>
-    <h2>Welcome Home!</h2>
-    <p *ngIf="authService.getCurrentUser() as user">Logged in as: {{ user.email || user.uid }}</p>
-    <button (click)="logout()">Logout</button>
-    <br />
-    <h2>Product Details</h2>
-    <div>
-      <input type="text" placeholder="Product Name" [(ngModel)]="newProduct.productName">
-      <textarea placeholder="Description" [(ngModel)]="newProduct.description"></textarea>
-  
-      <input type="number" placeholder="Number of Images" [(ngModel)]="numberOfImages">
-      <button (click)="prepareImageInputs()">Prepare Image Inputs</button>
-  
-      <div *ngIf="imageInputs.length > 0">
-        <h3>Select Images</h3>
-        <div *ngFor="let input of imageInputs; let i = index">
-          <input type="file" (change)="onFileSelected(i, $event)">
-          <span *ngIf="selectedFiles[i]">Selected: {{ selectedFiles[i].name }}</span>
-          <input type="number" placeholder="Image Sequence" [(ngModel)]="imageSequences[i]">
-        </div>
-        <button (click)="addProduct()">Add Product</button>
+  <h2>Welcome Home!</h2>
+  <p *ngIf="authService.getCurrentUser() as user">Logged in as: {{ user.email || user.uid }}</p>
+  <button (click)="logout()">Logout</button>
+  <br />
+  <h2>Product Details</h2>
+  <div>
+    <input type="text" placeholder="Product Name" [(ngModel)]="newProduct.productName">
+    <textarea placeholder="Description" [(ngModel)]="newProduct.description"></textarea>
+
+    <input type="number" placeholder="Number of Images" [(ngModel)]="numberOfImages">
+    <button (click)="prepareImageInputs()">Prepare Image Inputs</button>
+
+    <div *ngIf="imageInputs.length > 0">
+      <h3>Select Images</h3>
+      <div *ngFor="let input of imageInputs; let i = index">
+        <input type="file" (change)="onFileSelected(i, $event)">
+        <span *ngIf="selectedFiles[i]">Selected: {{ selectedFiles[i].name }}</span>
+        <input type="number" placeholder="Image Sequence" [(ngModel)]="imageSequences[i]">
       </div>
-    </div>
-  
-    <ul>
-      <li *ngFor="let product of products | async">
-        {{ product.productName }} - {{ product.description }}
-        <img *ngFor="let img of product.images" [src]="img" style="max-width: 50px; max-height: 50px;">
-        <button (click)="editProduct(product)">Edit</button>
-        <button (click)="deleteProduct(product.id!)">Delete</button>
-      </li>
-    </ul>
-  
-    <div *ngIf="editingProduct">
-      <h3>Edit Product</h3>
-      <input type="text" [(ngModel)]="editingProduct.productName">
-      <textarea [(ngModel)]="editingProduct.description"></textarea>
-      <div *ngFor="let img of editingProduct.images; let i = index">
-        <img [src]="img" style="max-width: 50px; max-height: 50px;">
-        <input type="text" placeholder="Replace Image URL" [(ngModel)]="editingImageUrls[i]">
-      </div>
-      <button (click)="updateProduct()">Update Product</button>
-      <button (click)="cancelEdit()">Cancel Edit</button>
+      <button (click)="addProduct()">Add Product</button>
     </div>
   </div>
+
+  <ul>
+    <li *ngFor="let product of products | async">
+      {{ product.productName }} - {{ product.description }}
+      <img *ngFor="let img of product.images" [src]="img" style="max-width: 50px; max-height: 50px;">
+      <button (click)="editProduct(product)">Edit</button>
+      <button (click)="deleteProduct(product.id!)">Delete</button>
+    </li>
+  </ul>
+
+  <div *ngIf="editingProduct">
+    <h3>Edit Product</h3>
+    <input type="text" [(ngModel)]="editingProduct.productName">
+    <textarea [(ngModel)]="editingProduct.description"></textarea>
+    <div *ngFor="let img of editingProduct.images; let i = index">
+      <img [src]="img" style="max-width: 50px; max-height: 50px;">
+      <input type="text" placeholder="Replace Image URL" [(ngModel)]="editingImageUrls[i]">
+    </div>
+    <button (click)="updateProduct()">Update Product</button>
+    <button (click)="cancelEdit()">Cancel Edit</button>
+  </div>
+</div>

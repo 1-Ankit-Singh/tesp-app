@@ -1,0 +1,9 @@
+<div>
+    <h2>Welcome Home!</h2>
+    <ul>
+        <li *ngFor="let product of products | async">
+            {{ product.productName }} - {{ product.description }}
+            <img *ngFor="let img of product.images" [src]="img" style="max-width: 50px; max-height: 50px;">
+        </li>
+    </ul>
+</div>

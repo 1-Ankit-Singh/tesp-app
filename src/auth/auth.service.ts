@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendEmailVerification, authState, User, sendPasswordResetEmail } from '@angular/fire/auth';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  sendEmailVerification,
+  authState,
+  User,
+  sendPasswordResetEmail,
+} from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -11,7 +20,11 @@ export class AuthService {
 
   async register(email: string, password: string): Promise<User | null> {
     try {
-      const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
       const user = userCredential.user;
       if (user) {
         await sendEmailVerification(user);
@@ -26,12 +39,18 @@ export class AuthService {
 
   async login(email: string, password: string): Promise<User | null> {
     try {
-      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
       const user = userCredential.user;
       if (user && user.emailVerified) {
         return user;
       } else if (user && !user.emailVerified) {
-        throw new Error('Email address is not verified. Please check your inbox.');
+        throw new Error(
+          'Email address is not verified. Please check your inbox.'
+        );
       } else {
         return null;
       }

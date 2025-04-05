@@ -1,0 +1,64 @@
+<h2>
+    {{
+      isRegistering
+        ? 'Create Account'
+        : isForgotPassword
+        ? 'Reset Password'
+        : 'Login'
+    }}
+  </h2>
+
+  <div *ngIf="!isRegistering && !isForgotPassword">
+    <input type="email" [(ngModel)]="loginEmail" placeholder="Email" />
+    <input
+      type="password"
+      [(ngModel)]="loginPassword"
+      placeholder="Password"
+    />
+    <button (click)="login()">Login</button>
+    <p>
+      <button type="button" href="#" (click)="isForgotPassword = true">
+        Forgot your password?
+      </button>
+    </p>
+    <p>
+      Don't have an account?
+      <button type="button" href="#" (click)="isRegistering = true">
+        Create one
+      </button>
+    </p>
+    <p *ngIf="loginError" style="color: red;">{{ loginError }}</p>
+  </div>
+
+  <div *ngIf="isRegistering">
+    <input type="email" [(ngModel)]="registerEmail" placeholder="Email" />
+    <input
+      type="password"
+      [(ngModel)]="registerPassword"
+      placeholder="Password"
+    />
+    <button (click)="register()">Create Account</button>
+    <p>
+      Already have an account?
+      <a href="#" (click)="isRegistering = false">Login</a>
+    </p>
+    <p *ngIf="registerMessage">{{ registerMessage }}</p>
+    <p *ngIf="registerError" style="color: red;">{{ registerError }}</p>
+  </div>
+
+  <div *ngIf="isForgotPassword">
+    <input
+      type="email"
+      [(ngModel)]="resetPasswordEmail"
+      placeholder="Email address"
+    />
+    <button (click)="resetPassword()">Send Reset Email</button>
+    <p>
+      Remember your password?
+      <a href="#" (click)="isForgotPassword = false">Log in</a>
+    </p>
+    <p *ngIf="resetPasswordMessage">{{ resetPasswordMessage }}</p>
+    <p *ngIf="resetPasswordError" style="color: red;">
+      {{ resetPasswordError }}
+    </p>
+  </div>
