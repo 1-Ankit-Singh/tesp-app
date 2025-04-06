@@ -6,17 +6,10 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { routes } from './app.routes';
 import { provideAuth } from '@angular/fire/auth';
 import { getAuth } from 'firebase/auth';
+import { environment } from '../environments/environment';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyA6YhnY77c1tDIELLj_Tnai3-66ZVUZNdc',
-  authDomain: 'quickshop-1b8b2.firebaseapp.com',
-  projectId: 'quickshop-1b8b2',
-  storageBucket: 'quickshop-1b8b2.appspot.com',
-  messagingSenderId: '453095755602',
-  appId: '1:453095755602:web:f5c2ebd1938660b99cf48b',
-  measurementId: 'G-NRDE57KMLW',
-};
-
+const firebaseConfig = environment.firebaseConfig;
+  
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
