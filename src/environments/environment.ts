@@ -8,4 +8,5 @@ export const environment = {
     appId: '1:453095755602:web:f5c2ebd1938660b99cf48b',
     measurementId: 'G-NRDE57KMLW',
   },
+  recaptchaSiteKey: '6Lcp6xYrAAAAACeHOFuUIzeOZxJz13mQzS9OU2Fk',
 };
