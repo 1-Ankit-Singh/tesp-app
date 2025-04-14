@@ -20,16 +20,16 @@ export const appConfig: ApplicationConfig = {
     provideStorage(() => getStorage()),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
-    // provideAppCheck(() => initializeAppCheck(initializeApp(firebaseConfig), { // Initialize App Check
-    //   provider: new ReCaptchaV3Provider(environment.recaptchaSiteKey),
-    //   isTokenAutoRefreshEnabled: true, // Recommended
-    // })),
-    provideAppCheck(() => {
-      const app = inject(FirebaseApp);
-      return initializeAppCheck(app, {
-        provider: new ReCaptchaV3Provider(environment.recaptchaSiteKey),
-        isTokenAutoRefreshEnabled: true, // Recommended
-      });
-    }),
+    provideAppCheck(() => initializeAppCheck(initializeApp(firebaseConfig), {
+      provider: new ReCaptchaV3Provider(environment.recaptchaSiteKey),
+      isTokenAutoRefreshEnabled: true, // Recommended
+    })),
+    // provideAppCheck(() => {
+    //   const app = inject(FirebaseApp); // const app = initializeApp(firebaseConfig);
+    //   return initializeAppCheck(app, {
+    //     provider: new ReCaptchaV3Provider(environment.recaptchaSiteKey),
+    //     isTokenAutoRefreshEnabled: true, // Recommended
+    //   });
+    // }),
   ],
 };
