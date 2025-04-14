@@ -1,1 +1,29 @@
-<router-outlet />
+<!-- <router-outlet /> -->
+<div class="d-flex flex-column min-vh-100 primary-background">
+    <main class="flex-grow-1">
+        <router-outlet></router-outlet>
+    </main>
+    <footer>
+        <section class="main-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2>About Organic Bedding Solutions</h2>
+                    <p>
+                        Our mission is to offer sustainable and healthy options for your home. 
+                        We are dedicated to providing high-quality, organic bedding products for your comfort and well-being.
+                        <br />
+                        Explore our wide range of beds, mattresses, pillows, and more, all made with your health and the environment in mind.
+                    </p>
+                </div>
+                <div>
+                    <h2>Contact Us</h2>
+                    <p>
+                        Phone Number: +91 123-456-7890
+                        <br />
+                        {{ 'Email ID: organicbeddingsolutions@example.com' }}
+                    </p>
+                </div>
+            </div>
+        </section>
+    </footer>
+</div>
