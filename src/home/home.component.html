@@ -1,45 +1,166 @@
-<div>
-  <h2>Welcome Home!</h2>
-  <p *ngIf="authService.getCurrentUser() as user">Logged in as: {{ user.email || user.uid }}</p>
-  <button (click)="logout()">Logout</button>
-  <br />
-  <h2>Product Details</h2>
-  <div>
-    <input type="text" placeholder="Product Name" [(ngModel)]="newProduct.productName">
-    <textarea placeholder="Description" [(ngModel)]="newProduct.description"></textarea>
-
-    <input type="number" placeholder="Number of Images" [(ngModel)]="numberOfImages">
-    <button (click)="prepareImageInputs()">Prepare Image Inputs</button>
-
-    <div *ngIf="imageInputs.length > 0">
-      <h3>Select Images</h3>
-      <div *ngFor="let input of imageInputs; let i = index">
-        <input type="file" (change)="onFileSelected(i, $event)">
-        <span *ngIf="selectedFiles[i]">Selected: {{ selectedFiles[i].name }}</span>
-        <input type="number" placeholder="Image Sequence" [(ngModel)]="imageSequences[i]">
+<div class="primary-background">
+  <div class="main-header d-flex justify-content-between align-items-center">
+    <h1>Organic Bedding Solutions</h1>
+    <div class="row g-3 align-items-center">
+      <div class="col-auto">
+        <label for="category-search" class="col-form-label">Search By Category</label>
       </div>
-      <button (click)="addProduct()">Add Product</button>
+      <div class="col-auto">
+        <select id="category-search" class="form-select" aria-label="Select Category">
+          <option selected>Choose</option>
+          @for (category of categoryist; track $index) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+      </div>
     </div>
   </div>
-
-  <ul>
-    <li *ngFor="let product of products | async">
-      {{ product.productName }} - {{ product.description }}
-      <img *ngFor="let img of product.images" [src]="img" style="max-width: 50px; max-height: 50px;">
-      <button (click)="editProduct(product)">Edit</button>
-      <button (click)="deleteProduct(product.id!)">Delete</button>
-    </li>
-  </ul>
-
-  <div *ngIf="editingProduct">
-    <h3>Edit Product</h3>
-    <input type="text" [(ngModel)]="editingProduct.productName">
-    <textarea [(ngModel)]="editingProduct.description"></textarea>
-    <div *ngFor="let img of editingProduct.images; let i = index">
-      <img [src]="img" style="max-width: 50px; max-height: 50px;">
-      <input type="text" placeholder="Replace Image URL" [(ngModel)]="editingImageUrls[i]">
+  <div>
+    <div class="d-flex justify-content-center align-items-center m-4">
+      <h4>Welcome, <span *ngIf="authService.getCurrentUser() as user">{{ user.email || user.uid }}</span>!</h4>
     </div>
-    <button (click)="updateProduct()">Update Product</button>
-    <button (click)="cancelEdit()">Cancel Edit</button>
+    <div class="d-flex justify-content-between align-items-center ms-5 me-5">
+      <!-- Add Product Button -->
+      <button type="button" class="btn btn-primary me-1 ms-1" data-bs-toggle="modal"
+        data-bs-target="#addProductModal">Add Product</button>
+      <button class="btn btn-primary ms-2" (click)="logout()">Logout</button>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title text-primary fs-5" id="addProductModalLabel">Add Product</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input class="form-control mb-1" type="text" placeholder="Product Name" aria-label="Product Name"
+              [(ngModel)]="newProduct.productName">
+            <textarea class="form-control mb-1" placeholder="Description" aria-label="Product Description"
+              [(ngModel)]="newProduct.description"></textarea>
+
+            <input class="form-control mb-1" type="number" placeholder="Number of Images" aria-label="Number of Images"
+              [(ngModel)]="numberOfImages">
+            <button type="button" class="btn btn-primary" (click)="prepareImageInputs()">Prepare Image Inputs</button>
+            @if (imageInputs.length > 0) {
+            <div>
+              <h4 class="text-center">Add Images</h4>
+              @for (input of imageInputs; track $index) {
+              <div>
+                <input class="form-control mb-1" type="file" aria-label="Upload File"
+                  (change)="onFileSelected($index, $event)">
+                <!-- @if (selectedFiles[$index]) {
+                <span>Selected: {{ selectedFiles[$index].name }}</span>
+                } -->
+                <input class="form-control mb-1" type="number" placeholder="Image Sequence" aria-label="Image Sequence"
+                  [(ngModel)]="imageSequences[$index]">
+              </div>
+              }
+            </div>
+            }
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            @if (imageInputs.length > 0) {
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="addProduct()">Add Product</button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center mt-4 me-5 ms-5">
+      <div class="input-group">
+        <input type="text" class="form-control" id="search-input" placeholder="Search for products..."
+          aria-label="Search" [(ngModel)]="searchTerm" (input)="onSearch()">
+        <button type="button" class="btn btn-outline-primary" (click)="onSearch()"><i class="bi bi-search"></i></button>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center mb-4 me-5 ms-5">
+      <ul class="p-4 list-unstyled d-flex flex-wrap gap-2 justify-content-center align-items-center">
+        @for (product of products | async; track $index) {
+        <li>
+          <div class="card" style="width: 18rem;">
+            <div id="carousel{{ $index }}" class="carousel slide">
+              <div class="carousel-inner">
+                @for (img of product.images; track $index) {
+                @if ($index === 0) {
+                <div class="carousel-item active image-container">
+                  <img [src]="img" class="d-block contained-image" alt="Product Image {{ $index + 1 }}">
+                </div>
+                }
+                @else {
+                <div class="carousel-item image-container">
+                  <img [src]="img" class="d-block contained-image" alt="Product Image {{ $index + 1 }}">
+                </div>
+                }
+                }
+              </div>
+              @if (product.images.length > 1) {
+              <button class="carousel-control-prev" type="button" attr.data-bs-target="#carousel{{ $index }}"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon custom-dark-black" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" attr.data-bs-target="#carousel{{ $index }}"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon custom-dark-black" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+              }
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ product.productName }}</h5>
+              <p class="card-text">{{ product.description }}</p>
+              <button type="button" class="btn btn-primary">View More...</button>
+              <!-- Edit Product Button -->
+              <button type="button" class="btn btn-primary me-1 ms-1" (click)="editProduct(product)"
+                data-bs-toggle="modal" data-bs-target="#editProductModal">Edit</button>
+              <button type="button" class="btn btn-danger" (click)="deleteProduct(product.id!)">Delete</button>
+            </div>
+          </div>
+        </li>
+        }
+      </ul>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          @if (editingProduct) {
+          <div class="modal-header">
+            <h1 class="modal-title text-primary fs-5" id="editProductModalLabel">Edit Product</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="text" class="form-control mb-1" aria-label="Product Name"
+              [(ngModel)]="editingProduct.productName">
+            <textarea class="form-control mb-1" aria-label="Product Description"
+              [(ngModel)]="editingProduct.description"></textarea>
+            @for (img of editingProduct.images; track $index) {
+            <div>
+              <div class="d-flex justify-content-center align-items-center mb-1">
+                <div class="image-container">
+                  <img [src]="img" class="contained-image" alt="Product Image {{ $index + 1 }}">
+                </div>
+              </div>
+              <input type="text" class="form-control mb-1" placeholder="Replace Image URL"
+                aria-label="Replace Image URL" [(ngModel)]="editingImageUrls[$index]">
+            </div>
+            }
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelEdit()">Cancel
+              Edit</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="updateProduct()">Update Product</button> 
+          </div>
+          }
+        </div>
+      </div>
+    </div>
   </div>
 </div>

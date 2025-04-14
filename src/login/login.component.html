@@ -1,64 +1,119 @@
-<h2>
-    {{
-      isRegistering
-        ? 'Create Account'
-        : isForgotPassword
-        ? 'Reset Password'
-        : 'Login'
-    }}
-  </h2>
-
-  <div *ngIf="!isRegistering && !isForgotPassword">
-    <input type="email" [(ngModel)]="loginEmail" placeholder="Email" />
-    <input
-      type="password"
-      [(ngModel)]="loginPassword"
-      placeholder="Password"
-    />
-    <button (click)="login()">Login</button>
-    <p>
-      <button type="button" href="#" (click)="isForgotPassword = true">
-        Forgot your password?
-      </button>
-    </p>
-    <p>
-      Don't have an account?
-      <button type="button" href="#" (click)="isRegistering = true">
-        Create one
-      </button>
-    </p>
-    <p *ngIf="loginError" style="color: red;">{{ loginError }}</p>
+<div class="primary-background">
+  <div class="main-header d-flex justify-content-start align-items-center">
+    <h1>Organic Bedding Solutions</h1>
   </div>
+  <div class="d-flex justify-content-center align-items-center mt-4 mb-4 me-5 ms-5">
+    <div class="d-flex flex-column align-items-center justify-content-center bg-white border border-2 rounded-3 p-4">
+      <h2 class="mb-4">
+        {{ isRegistering ? 'Create Account' : isForgotPassword ? 'Reset Password' : 'Login' }}
+      </h2>
+      @if (!isRegistering && !isForgotPassword) {
+      <div>
+        <div>
+          <div class="mb-3">
+            <label for="login-email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="login-email" [(ngModel)]="loginEmail" placeholder="Email">
+          </div>
+          <div class="mb-3">
+            <label for="login-phone-number" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="login-phone-number" placeholder="Phone Number">
+          </div>
+          <div class="mb-3">
+            <label for="login-password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="login-password" [(ngModel)]="loginPassword"
+              placeholder="Password">
+          </div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div>
+            <button type="button" class="btn btn-primary mb-3" (click)="login()">Login</button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-link" (click)="isForgotPassword = true">Forgot your password?</button>
+          </div>
+          <div>
+            Don't have an account?
+          </div>
+          <div>
+            <button type="button" class="btn btn-link" (click)="isRegistering = true">Create one</button>
+          </div>
+        </div>
+        @if (loginError) {
+        <p class="text-danger">{{ loginError }}</p>
+        }
+      </div>
+      }
 
-  <div *ngIf="isRegistering">
-    <input type="email" [(ngModel)]="registerEmail" placeholder="Email" />
-    <input
-      type="password"
-      [(ngModel)]="registerPassword"
-      placeholder="Password"
-    />
-    <button (click)="register()">Create Account</button>
-    <p>
-      Already have an account?
-      <a href="#" (click)="isRegistering = false">Login</a>
-    </p>
-    <p *ngIf="registerMessage">{{ registerMessage }}</p>
-    <p *ngIf="registerError" style="color: red;">{{ registerError }}</p>
-  </div>
+      @if (isRegistering) {
+      <div>
+        <div>
+          <div class="mb-3">
+            <label for="register-email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="register-email" [(ngModel)]="registerEmail"
+              placeholder="Email">
+          </div>
+          <div class="mb-3">
+            <label for="register-phone-number" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="register-phone-number" placeholder="Phone Number">
+          </div>
+          <div class="mb-3">
+            <label for="register-password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="register-password" [(ngModel)]="registerPassword"
+              placeholder="Password">
+          </div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div>
+            <button type="button" class="btn btn-primary mb-3" (click)="register()">Create Account</button>
+          </div>
+          <div>
+            Already have an account?
+          </div>
+          <div>
+            <button type="button" class="btn btn-link" (click)="isRegistering = false">Login</button>
+          </div>
+        </div>
+        @if (registerMessage) {
+        <p>{{ registerMessage }}</p>
+        }
+        @if (registerError) {
+        <p class="text-danger">{{ registerError }}</p>
+        }
+      </div>
+      }
 
-  <div *ngIf="isForgotPassword">
-    <input
-      type="email"
-      [(ngModel)]="resetPasswordEmail"
-      placeholder="Email address"
-    />
-    <button (click)="resetPassword()">Send Reset Email</button>
-    <p>
-      Remember your password?
-      <a href="#" (click)="isForgotPassword = false">Log in</a>
-    </p>
-    <p *ngIf="resetPasswordMessage">{{ resetPasswordMessage }}</p>
-    <p *ngIf="resetPasswordError" style="color: red;">
-      {{ resetPasswordError }}
-    </p>
+      @if (isForgotPassword) {
+      <div>
+        <div>
+          <div class="mb-3">
+            <label for="forgot-email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="forgot-email" [(ngModel)]="resetPasswordEmail"
+              placeholder="Email">
+          </div>
+          <div class="mb-3">
+            <label for="forgot-phone-number" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="forgot-phone-number" placeholder="Phone Number">
+          </div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div>
+            <button type="button" class="btn btn-primary mb-3" (click)="resetPassword()">Send Reset Email</button>
+          </div>
+          <div>
+            Remember your password?
+          </div>
+          <div>
+            <button type="button" class="btn btn-link" (click)="isForgotPassword = false">Login</button>
+          </div>
+        </div>
+        @if (resetPasswordMessage) {
+        <p>{{ resetPasswordMessage }}</p>
+        }
+        @if (resetPasswordError) {
+        <p class="text-danger">{{ resetPasswordError }}</p>
+        }
+      </div>
+      }
+    </div>
   </div>
+</div>

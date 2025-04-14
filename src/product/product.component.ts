@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class ProductComponent {
   searchTerm!: string;
   products!: Observable<Product[]>;
+  categoryist: string[] = ['Sofa', 'Bedsheet', 'Foam', 'Mattress'];
 
   constructor(private productService: ProductService) {
     this.products = this.productService.getProducts();

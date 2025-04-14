@@ -22,6 +22,8 @@ export class HomeComponent implements OnInit {
   imageSequences: number[] = [];
   editingProduct: Product | null = null;
   editingImageUrls: string[] = [];
+  searchTerm!: string;
+  categoryist: string[] = ['Sofa', 'Bedsheet', 'Foam', 'Mattress'];
 
   constructor(
     private productService: ProductService,
@@ -37,6 +39,10 @@ export class HomeComponent implements OnInit {
     this.authService.logout().then(() => {
       this.router.navigate(['/login']);
     });
+  }
+
+  onSearch() {
+    console.log(this.searchTerm);
   }
 
   prepareImageInputs() {
