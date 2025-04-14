@@ -19,7 +19,7 @@ html, body {
 .main-footer {
   background-color: var(--bs-primary);
   color: white;
-  padding: 20px 40px 20px 40px;
+  padding: 4px;
   border: 1px solid var(--bs-primary);
   border-top-left-radius: 50px;
   border-top-right-radius: 50px;
@@ -43,4 +43,8 @@ html, body {
 .custom-dark-black {
   background-color: #333333;
   border-radius: 25%;
+}
+
+.no-margin {
+  margin: 0 !important;
 }
