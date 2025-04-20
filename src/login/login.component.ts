@@ -15,12 +15,15 @@ export class LoginComponent {
   isForgotPassword = false;
   loginEmail = '';
   loginPassword = '';
+  loginPhoneNumber = '';
   loginError = '';
   registerEmail = '';
   registerPassword = '';
+  registerPhoneNumber = '';
   registerMessage = '';
   registerError = '';
   resetPasswordEmail = '';
+  resetPhoneNumber = '';
   resetPasswordMessage = '';
   resetPasswordError = '';
 
@@ -29,6 +32,17 @@ export class LoginComponent {
   async register() {
     this.registerError = '';
     this.registerMessage = '';
+    this.registerEmail = this.registerEmail.trim();
+    this.registerPassword = this.registerPassword.trim();
+    this.registerPhoneNumber = this.registerPhoneNumber.trim();
+    if (!this.registerEmail || !this.registerPassword || !this.registerPhoneNumber) {
+      this.registerError = 'Email, Phone Number and password are required.';
+      return;
+    }
+    if (!await this.checkAllowedUser(this.registerEmail, this.registerPhoneNumber)) {
+      this.registerError = 'Invalid Details.';
+      return;
+    }
     try {
       const user = await this.authService.register(
         this.registerEmail,
@@ -46,8 +60,23 @@ export class LoginComponent {
     }
   }
 
+  async checkAllowedUser(emailID: string, phoneNumber: string): Promise<boolean> {
+     return await this.authService.checkAllowedUser(emailID, phoneNumber);
+  }
+
   async login() {
     this.loginError = '';
+    this.loginEmail = this.loginEmail.trim();
+    this.loginPassword = this.loginPassword.trim();
+    this.loginPhoneNumber = this.loginPhoneNumber.trim();
+    if (!this.loginEmail || !this.loginPassword || !this.loginPhoneNumber) {
+      this.loginError = 'Email, Phone Number and Password are required.';
+      return;
+    }
+    if (!await this.checkAllowedUser(this.loginEmail, this.loginPhoneNumber)) {
+      this.loginError = 'Invalid Details.';
+      return;
+    } 
     try {
       await this.authService.login(this.loginEmail, this.loginPassword);
       this.router.navigate(['/home']);
@@ -59,6 +88,16 @@ export class LoginComponent {
   async resetPassword() {
     this.resetPasswordError = '';
     this.resetPasswordMessage = '';
+    this.resetPasswordEmail = this.resetPasswordEmail.trim();
+    this.resetPhoneNumber = this.resetPhoneNumber.trim();
+    if (!this.resetPasswordEmail || !this.resetPhoneNumber) {
+      this.resetPasswordError = 'Email and Phone Number are required.';
+      return;
+    }
+    if (!await this.checkAllowedUser(this.resetPasswordEmail, this.resetPhoneNumber)) {
+      this.resetPasswordError = 'Invalid Details.';
+      return;
+    }
     try {
       await this.authService.forgotPassword(this.resetPasswordEmail);
       this.resetPasswordMessage =

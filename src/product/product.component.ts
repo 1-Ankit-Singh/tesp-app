@@ -14,10 +14,17 @@ import { FormsModule } from '@angular/forms';
 export class ProductComponent {
   searchTerm!: string;
   products!: Observable<Product[]>;
+  productDetails!: Product;
+  showViewProductDetails: boolean = false;
   categoryist: string[] = ['Sofa', 'Bedsheet', 'Foam', 'Mattress'];
 
   constructor(private productService: ProductService) {
     this.products = this.productService.getProducts();
+  }
+
+  viewProductDetails(product: Product) {
+    this.showViewProductDetails = true;
+    this.productDetails = product;
   }
 
   onSearch() {

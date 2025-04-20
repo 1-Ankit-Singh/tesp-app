@@ -22,6 +22,8 @@ export class HomeComponent implements OnInit {
   imageSequences: number[] = [];
   editingProduct: Product | null = null;
   editingImageUrls: string[] = [];
+  productDetails!: Product;
+  showViewProductDetails: boolean = false;
   searchTerm!: string;
   categoryist: string[] = ['Sofa', 'Bedsheet', 'Foam', 'Mattress'];
 
@@ -43,6 +45,11 @@ export class HomeComponent implements OnInit {
 
   onSearch() {
     console.log(this.searchTerm);
+  }
+
+  viewProductDetails(product: Product) {
+    this.showViewProductDetails = true;
+    this.productDetails = product;
   }
 
   prepareImageInputs() {

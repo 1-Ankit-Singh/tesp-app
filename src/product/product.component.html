@@ -59,11 +59,69 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ product.productName }}</h5>
                         <p class="card-text">{{ product.description }}</p>
-                        <button type="button" class="btn btn-primary">View More...</button>
+                        <!-- View Product Modal Button -->
+                        <button type="button" class="btn btn-primary" (click)="viewProductDetails(product)"
+                            data-bs-toggle="modal" data-bs-target="#viewProductModal">View More...</button>
                     </div>
                 </div>
             </li>
             }
         </ul>
+    </div>
+    <!-- View Product Modal -->
+    <div class="custom-full-screen-modal">
+        <div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title text-primary fs-5" id="viewProductModalLabel">Product Details</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            @if(showViewProductDetails){
+                            <div id="carousel-view-product" class="carousel slide">
+                                <div class="carousel-inner">
+                                    @for (img of productDetails.images; track $index) {
+                                    @if ($index === 0) {
+                                    <div class="carousel-item active view-prouct-image-container">
+                                        <img [src]="img" class="d-block view-prouct-contained-image"
+                                            alt="Product Image {{ $index + 1 }}">
+                                    </div>
+                                    }
+                                    @else {
+                                    <div class="carousel-item view-prouct-image-container">
+                                        <img [src]="img" class="d-block view-prouct-contained-image"
+                                            alt="Product Image {{ $index + 1 }}">
+                                    </div>
+                                    }
+                                    }
+                                </div>
+                                @if (productDetails.images.length > 1) {
+                                <button class="carousel-control-prev" type="button"
+                                    data-bs-target="#carousel-view-product" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon custom-dark-black"
+                                        aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button"
+                                    data-bs-target="#carousel-view-product" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon custom-dark-black"
+                                        aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                                }
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ productDetails.productName }}</h5>
+                                <p class="card-text">{{ productDetails.description }}</p>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

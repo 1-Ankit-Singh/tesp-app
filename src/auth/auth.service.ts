@@ -11,6 +11,7 @@ import {
 } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -89,6 +90,26 @@ export class AuthService {
       }
     } else {
       console.warn('No user is currently logged in.');
+    }
+  }
+
+  async checkAllowedUser(
+    emailID: string,
+    phoneNumber: string
+  ): Promise<boolean> {
+    const db = getFirestore();
+    const allowedUsersCollectionRef = collection(db, 'allowedUsers');
+    const q = query(
+      allowedUsersCollectionRef,
+      where('emailID', '==', emailID),
+      where('phoneNumber', '==', phoneNumber)
+    );
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      return true;
+    } else {
+      return false;
     }
   }
 
