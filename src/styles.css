@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-html, body {
+html,
+body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
@@ -26,7 +27,7 @@ html, body {
 }
 
 .primary-background {
-    background-color: var(--bs-primary-border-subtle);
+  background-color: var(--bs-primary-border-subtle);
 }
 
 .image-container {
@@ -80,4 +81,5 @@ html, body {
 .custom-full-screen-modal .modal-content {
   border-radius: 10px !important;
 }
+
 /* .custom-full-screen-modal .modal-header {} */

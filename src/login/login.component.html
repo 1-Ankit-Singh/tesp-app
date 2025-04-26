@@ -7,6 +7,7 @@
       <h2 class="mb-4">
         {{ isRegistering ? 'Create Account' : isForgotPassword ? 'Reset Password' : 'Login' }}
       </h2>
+      <!-- Login Form -->
       @if (!isRegistering && !isForgotPassword) {
       <div>
         <div>
@@ -16,7 +17,8 @@
           </div>
           <div class="mb-3">
             <label for="login-phone-number" class="form-label">Phone Number</label>
-            <input type="tel" class="form-control" id="login-phone-number" [(ngModel)]="loginPhoneNumber" placeholder="Phone Number">
+            <input type="tel" class="form-control" id="login-phone-number" [(ngModel)]="loginPhoneNumber"
+              placeholder="Phone Number">
           </div>
           <div class="mb-3">
             <label for="login-password" class="form-label">Password</label>
@@ -43,7 +45,7 @@
         }
       </div>
       }
-
+      <!-- Register Form -->
       @if (isRegistering) {
       <div>
         <div>
@@ -54,7 +56,8 @@
           </div>
           <div class="mb-3">
             <label for="register-phone-number" class="form-label">Phone Number</label>
-            <input type="tel" class="form-control" id="register-phone-number" [(ngModel)]="registerPhoneNumber" placeholder="Phone Number">
+            <input type="tel" class="form-control" id="register-phone-number" [(ngModel)]="registerPhoneNumber"
+              placeholder="Phone Number">
           </div>
           <div class="mb-3">
             <label for="register-password" class="form-label">Password</label>
@@ -81,7 +84,7 @@
         }
       </div>
       }
-
+      <!-- Forgot Password Form -->
       @if (isForgotPassword) {
       <div>
         <div>
@@ -92,7 +95,8 @@
           </div>
           <div class="mb-3">
             <label for="forgot-phone-number" class="form-label">Phone Number</label>
-            <input type="tel" class="form-control" id="forgot-phone-number" [(ngModel)]="resetPhoneNumber" placeholder="Phone Number">
+            <input type="tel" class="form-control" id="forgot-phone-number" [(ngModel)]="resetPhoneNumber"
+              placeholder="Phone Number">
           </div>
         </div>
         <div class="d-flex flex-column justify-content-center align-items-center">

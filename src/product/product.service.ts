@@ -43,6 +43,7 @@ export class ProductService {
               id: doc.id,
               productName: doc.productName,
               description: doc.description,
+              category: doc.category,
               images: doc.images,
             } as Product)
         )
@@ -115,6 +116,7 @@ export class ProductService {
         updateDoc(doc(this.productsCollection, product.id), {
           productName: product.productName,
           description: product.description,
+          category: product.category,
           images: imageUrls,
         })
       );
@@ -168,5 +170,29 @@ export class ProductService {
 
   private runInContext<T>(callback: () => T): T {
     return runInInjectionContext(this.injector, callback);
+  }
+
+  searchProducts(searchTerm: string, products$: Observable<Product[]>): Observable<Product[]> {
+    return products$.pipe(
+      map((products) =>
+        products.filter((product) => {
+          const searchFields = [product.productName, product.description].filter(Boolean).join(' ').toLowerCase(); // Adjust fields as needed
+          const lowerSearchTerm = searchTerm.toLowerCase();
+          return searchFields.includes(lowerSearchTerm);
+        })
+      )
+    );
+  }
+
+  searchProductsByCategory(searchTerm: string, products$: Observable<Product[]>): Observable<Product[]> {
+    return products$.pipe(
+      map((products) =>
+        products.filter((product) => {
+          const searchFields = [product.category].filter(Boolean).join(' ').toLowerCase(); // Adjust fields as needed
+          const lowerSearchTerm = searchTerm.toLowerCase();
+          return searchFields.includes(lowerSearchTerm);
+        })
+      )
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Product } from '../Model/product';
@@ -6,6 +6,10 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { ProductService } from '../product/product.service';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { CategoryService } from '../category/category.service';
+import { UsersService } from '../users/users.service';
+import { Category } from '../Model/category';
+import { Users } from '../Model/users';
 
 @Component({
   selector: 'app-home',
@@ -13,9 +17,9 @@ import { AuthService } from '../auth/auth.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   products!: Observable<Product[]>;
-  newProduct: Product = { productName: '', description: '', images: [] };
+  newProduct: Product = { productName: '', description: '', category: '', images: [] };
   numberOfImages: number = 0;
   imageInputs: any[] = [];
   selectedFiles: File[] = [];
@@ -25,17 +29,28 @@ export class HomeComponent implements OnInit {
   productDetails!: Product;
   showViewProductDetails: boolean = false;
   searchTerm!: string;
-  categoryist: string[] = ['Sofa', 'Bedsheet', 'Foam', 'Mattress'];
+  searchCategory: string = 'Choose';
+  categoryList!: Observable<Category[]>;
+  userList!: Observable<Users[]>;
 
   constructor(
+    private categoryService: CategoryService,
+    private userService: UsersService,
     private productService: ProductService,
     public authService: AuthService,
     private router: Router
   ) {
     this.products = this.productService.getProducts();
+    this.categoryList = this.categoryService.getCategories();
   } // Inject the service
 
-  ngOnInit() {}
+  initializeCategory() {
+    this.categoryList = this.categoryService.getCategories();
+  }
+
+  initializeUser() {
+    this.userList = this.userService.getUsers();
+  }
 
   logout() {
     this.authService.logout().then(() => {
@@ -44,7 +59,22 @@ export class HomeComponent implements OnInit {
   }
 
   onSearch() {
-    console.log(this.searchTerm);
+    if(this.searchTerm){
+      this.products = this.productService.searchProducts(this.searchTerm, this.products);
+    } else {
+      this.products = this.productService.getProducts();
+    }
+  }
+
+  onSearchCategory() {
+    if(this.searchCategory == 'Choose'){
+      this.searchCategory = '';
+    }
+    if(this.searchCategory){
+      this.products = this.productService.searchProductsByCategory(this.searchCategory, this.products);
+    } else {
+      this.products = this.productService.getProducts();
+    }
   }
 
   viewProductDetails(product: Product) {
@@ -70,7 +100,7 @@ export class HomeComponent implements OnInit {
       this.selectedFiles,
       this.imageSequences
     );
-    this.newProduct = { productName: '', description: '', images: [] };
+    this.newProduct = { productName: '', description: '', category: '', images: [] };
     this.imageInputs = [];
     this.selectedFiles = [];
     this.imageSequences = [];

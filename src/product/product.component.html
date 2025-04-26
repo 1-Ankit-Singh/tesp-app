@@ -1,4 +1,5 @@
 <div class="primary-background">
+    <!-- Main Header -->
     <div class="main-header d-flex justify-content-between align-items-center">
         <h1>Organic Bedding Solutions</h1>
         <div class="row g-3 align-items-center">
@@ -6,15 +7,18 @@
                 <label for="category-search" class="col-form-label">Search By Category</label>
             </div>
             <div class="col-auto">
-                <select id="category-search" class="form-select" aria-label="Select Category">
+                <select id="category-search" class="form-select" aria-label="Select Category" [(ngModel)]="searchCategory" (change)="onSearchCategory()">
                     <option selected>Choose</option>
-                    @for (category of categoryist; track $index) {
-                    <option [value]="category">{{ category }}</option>
+                    @for (category of categoryList | async; track $index) {
+                    @if(category.status) {
+                        <option [value]="category.name">{{ category.name }}</option>
+                    }
                     }
                 </select>
             </div>
         </div>
     </div>
+    <!-- Search Bar -->
     <div class="d-flex justify-content-center align-items-center mt-4 me-5 ms-5">
         <div class="input-group">
             <input type="text" class="form-control" id="search-input" placeholder="Search for products..."
@@ -23,6 +27,7 @@
                     class="bi bi-search"></i></button>
         </div>
     </div>
+    <!-- Product List -->
     <div class="d-flex justify-content-center align-items-center mb-4 me-5 ms-5">
         <ul class="p-4 list-unstyled d-flex flex-wrap gap-2 justify-content-center align-items-center">
             @for (product of products | async; track $index) {
@@ -57,7 +62,7 @@
                         }
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">{{ product.productName }}</h5>
+                        <h5 class="card-title">{{ product.productName }} | {{product.category}}</h5>
                         <p class="card-text">{{ product.description }}</p>
                         <!-- View Product Modal Button -->
                         <button type="button" class="btn btn-primary" (click)="viewProductDetails(product)"

@@ -1,4 +1,5 @@
 <div class="primary-background">
+  <!-- Main Header -->
   <div class="main-header d-flex justify-content-between align-items-center">
     <h1>Organic Bedding Solutions</h1>
     <div class="row g-3 align-items-center">
@@ -6,24 +7,74 @@
         <label for="category-search" class="col-form-label">Search By Category</label>
       </div>
       <div class="col-auto">
-        <select id="category-search" class="form-select" aria-label="Select Category">
+        <select id="category-search" class="form-select" aria-label="Select Category" [(ngModel)]="searchCategory"
+          (change)="onSearchCategory()">
           <option selected>Choose</option>
-          @for (category of categoryist; track $index) {
-            <option [value]="category">{{ category }}</option>
+          @for (category of categoryList | async; track $index) {
+          @if (category.status) {
+          <option [value]="category.name">{{ category.name }}</option>
+          }
           }
         </select>
       </div>
     </div>
   </div>
   <div>
+    <!-- Welcome Message -->
     <div class="d-flex justify-content-center align-items-center m-4">
       <h4>Welcome, <span *ngIf="authService.getCurrentUser() as user">{{ user.email || user.uid }}</span>!</h4>
     </div>
+
+    <!-- Admin Actions -->
     <div class="d-flex justify-content-between align-items-center ms-5 me-5">
-      <!-- Add Product Button -->
-      <button type="button" class="btn btn-primary me-1 ms-1" data-bs-toggle="modal"
-        data-bs-target="#addProductModal">Add Product</button>
+      <div>
+        <!-- Add Product Button -->
+        <button type="button" class="btn btn-primary me-1 ms-1" data-bs-toggle="modal"
+          data-bs-target="#addProductModal">Add Product</button>
+        <!-- Manage Category Button -->
+        <button type="button" class="btn btn-primary me-1 ms-1" data-bs-toggle="modal"
+          data-bs-target="#manageCategoryModal" (click)="initializeCategory()">Manage Category</button>
+        <!-- Manage User Button -->
+        <button type="button" class="btn btn-primary me-1 ms-1" data-bs-toggle="modal" data-bs-target="#manageUserModal"
+          (click)="initializeUser()">Manage User</button>
+      </div>
       <button class="btn btn-primary ms-2" (click)="logout()">Logout</button>
+    </div>
+
+    <!-- Manage Category Modal -->
+    <div class="modal fade" id="manageCategoryModal" tabindex="-1" aria-labelledby="manageCategoryModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title text-primary fs-5" id="manageCategoryModalLabel">Manage Category</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            @for (category of categoryList | async; track $index) {
+            {{category.name}}
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Manage User Modal -->
+    <div class="modal fade" id="manageUserModal" tabindex="-1" aria-labelledby="manageUserModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title text-primary fs-5" id="manageUserModalLabel">Manage User</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            @for (user of userList | async; track $index) {
+            {{user.emailID}}
+            }
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Add Product Modal -->
@@ -38,6 +89,8 @@
           <div class="modal-body">
             <input class="form-control mb-1" type="text" placeholder="Product Name" aria-label="Product Name"
               [(ngModel)]="newProduct.productName">
+            <input class="form-control mb-1" type="text" placeholder="Product Category" aria-label="Product Category"
+              [(ngModel)]="newProduct.category">
             <textarea class="form-control mb-1" placeholder="Description" aria-label="Product Description"
               [(ngModel)]="newProduct.description"></textarea>
 
@@ -64,13 +117,15 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             @if (imageInputs.length > 0) {
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="addProduct()">Add Product</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="addProduct()">Add
+              Product</button>
             }
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Search Bar -->
     <div class="d-flex justify-content-center align-items-center mt-4 me-5 ms-5">
       <div class="input-group">
         <input type="text" class="form-control" id="search-input" placeholder="Search for products..."
@@ -78,6 +133,8 @@
         <button type="button" class="btn btn-outline-primary" (click)="onSearch()"><i class="bi bi-search"></i></button>
       </div>
     </div>
+
+    <!-- Product List -->
     <div class="d-flex justify-content-center align-items-center mb-4 me-5 ms-5">
       <ul class="p-4 list-unstyled d-flex flex-wrap gap-2 justify-content-center align-items-center">
         @for (product of products | async; track $index) {
@@ -112,11 +169,11 @@
               }
             </div>
             <div class="card-body">
-              <h5 class="card-title">{{ product.productName }}</h5>
+              <h5 class="card-title">{{ product.productName }} | {{product.category}}</h5>
               <p class="card-text">{{ product.description }}</p>
               <!-- View Product Modal Button -->
-              <button type="button" class="btn btn-primary" (click)="viewProductDetails(product)"
-              data-bs-toggle="modal" data-bs-target="#viewProductModal">View More...</button>
+              <button type="button" class="btn btn-primary" (click)="viewProductDetails(product)" data-bs-toggle="modal"
+                data-bs-target="#viewProductModal">View More...</button>
               <!-- Edit Product Button -->
               <button type="button" class="btn btn-primary me-1 ms-1" (click)="editProduct(product)"
                 data-bs-toggle="modal" data-bs-target="#editProductModal">Edit</button>
@@ -141,6 +198,8 @@
           <div class="modal-body">
             <input type="text" class="form-control mb-1" aria-label="Product Name"
               [(ngModel)]="editingProduct.productName">
+            <input type="text" class="form-control mb-1" aria-label="Product Category"
+              [(ngModel)]="editingProduct.category">
             <textarea class="form-control mb-1" aria-label="Product Description"
               [(ngModel)]="editingProduct.description"></textarea>
             @for (img of editingProduct.images; track $index) {
@@ -158,67 +217,65 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelEdit()">Cancel
               Edit</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="updateProduct()">Update Product</button> 
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="updateProduct()">Update
+              Product</button>
           </div>
           }
         </div>
       </div>
     </div>
-  </div>
+
     <!-- View Product Modal -->
     <div class="custom-full-screen-modal">
       <div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductModalLabel"
-          aria-hidden="true">
-          <div class="modal-dialog modal-fullscreen">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h1 class="modal-title text-primary fs-5" id="viewProductModalLabel">Product Details</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title text-primary fs-5" id="viewProductModalLabel">Product Details</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="card">
+                @if(showViewProductDetails){
+                <div id="carousel-view-product" class="carousel slide">
+                  <div class="carousel-inner">
+                    @for (img of productDetails.images; track $index) {
+                    @if ($index === 0) {
+                    <div class="carousel-item active view-prouct-image-container">
+                      <img [src]="img" class="d-block view-prouct-contained-image" alt="Product Image {{ $index + 1 }}">
+                    </div>
+                    }
+                    @else {
+                    <div class="carousel-item view-prouct-image-container">
+                      <img [src]="img" class="d-block view-prouct-contained-image" alt="Product Image {{ $index + 1 }}">
+                    </div>
+                    }
+                    }
                   </div>
-                  <div class="modal-body">
-                      <div class="card">
-                          @if(showViewProductDetails){
-                          <div id="carousel-view-product" class="carousel slide">
-                              <div class="carousel-inner">
-                                  @for (img of productDetails.images; track $index) {
-                                  @if ($index === 0) {
-                                  <div class="carousel-item active view-prouct-image-container">
-                                      <img [src]="img" class="d-block view-prouct-contained-image"
-                                          alt="Product Image {{ $index + 1 }}">
-                                  </div>
-                                  }
-                                  @else {
-                                  <div class="carousel-item view-prouct-image-container">
-                                      <img [src]="img" class="d-block view-prouct-contained-image"
-                                          alt="Product Image {{ $index + 1 }}">
-                                  </div>
-                                  }
-                                  }
-                              </div>
-                              @if (productDetails.images.length > 1) {
-                              <button class="carousel-control-prev" type="button"
-                                  data-bs-target="#carousel-view-product" data-bs-slide="prev">
-                                  <span class="carousel-control-prev-icon custom-dark-black"
-                                      aria-hidden="true"></span>
-                                  <span class="visually-hidden">Previous</span>
-                              </button>
-                              <button class="carousel-control-next" type="button"
-                                  data-bs-target="#carousel-view-product" data-bs-slide="next">
-                                  <span class="carousel-control-next-icon custom-dark-black"
-                                      aria-hidden="true"></span>
-                                  <span class="visually-hidden">Next</span>
-                              </button>
-                              }
-                          </div>
-                          <div class="card-body">
-                              <h5 class="card-title">{{ productDetails.productName }}</h5>
-                              <p class="card-text">{{ productDetails.description }}</p>
-                          </div>
-                          }
-                      </div>
-                  </div>
+                  @if (productDetails.images.length > 1) {
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carousel-view-product"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon custom-dark-black" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carousel-view-product"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon custom-dark-black" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                  }
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">{{ productDetails.productName }} | {{productDetails.category}}</h5>
+                  <p class="card-text">{{ productDetails.description }}</p>
+                </div>
+                }
               </div>
+            </div>
           </div>
+        </div>
       </div>
+    </div>
   </div>
 </div>
