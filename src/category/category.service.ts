@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 import { Category } from '../Model/category';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryService {
   private firestore: Firestore = inject(Firestore); // Inject Firestore
@@ -30,11 +30,16 @@ export class CategoryService {
 
   // Read (Get) all categories
   getCategories(): Observable<Category[]> {
-    return collectionData(this.categoriesCollection, { idField: 'id' }) as Observable<Category[]>;
+    return collectionData(this.categoriesCollection, {
+      idField: 'id',
+    }) as Observable<Category[]>;
   }
 
   // Update a category
-  async updateCategory(id: string, updatedCategory: Partial<Category>): Promise<void> {
+  async updateCategory(
+    id: string,
+    updatedCategory: Partial<Category>
+  ): Promise<void> {
     const categoryDocRef = doc(this.firestore, `category/${id}`);
     try {
       await updateDoc(categoryDocRef, updatedCategory);

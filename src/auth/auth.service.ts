@@ -11,7 +11,13 @@ import {
 } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',

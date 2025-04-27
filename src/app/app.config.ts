@@ -1,9 +1,21 @@
-import { ApplicationConfig, inject, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { FirebaseApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import {
+  FirebaseApp,
+  initializeApp,
+  provideFirebaseApp,
+} from '@angular/fire/app';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { provideAppCheck, ReCaptchaV3Provider, AppCheckOptions } from '@angular/fire/app-check';
+import {
+  provideAppCheck,
+  ReCaptchaV3Provider,
+  AppCheckOptions,
+} from '@angular/fire/app-check';
 import { routes } from './app.routes';
 import { provideAuth } from '@angular/fire/auth';
 import { getAuth } from 'firebase/auth';
@@ -20,10 +32,12 @@ export const appConfig: ApplicationConfig = {
     provideStorage(() => getStorage()),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
-    provideAppCheck(() => initializeAppCheck(initializeApp(firebaseConfig), {
-      provider: new ReCaptchaV3Provider(environment.recaptchaSiteKey),
-      isTokenAutoRefreshEnabled: true, // Recommended
-    })),
+    provideAppCheck(() =>
+      initializeAppCheck(initializeApp(firebaseConfig), {
+        provider: new ReCaptchaV3Provider(environment.recaptchaSiteKey),
+        isTokenAutoRefreshEnabled: true, // Recommended
+      })
+    ),
     // provideAppCheck(() => {
     //   const app = inject(FirebaseApp); // const app = initializeApp(firebaseConfig);
     //   return initializeAppCheck(app, {

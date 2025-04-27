@@ -7,11 +7,12 @@
                 <label for="category-search" class="col-form-label">Search By Category</label>
             </div>
             <div class="col-auto">
-                <select id="category-search" class="form-select" aria-label="Select Category" [(ngModel)]="searchCategory" (change)="onSearchCategory()">
+                <select id="category-search" class="form-select" aria-label="Select Category"
+                    [(ngModel)]="searchCategory" (change)="onSearchCategory()">
                     <option selected>Choose</option>
                     @for (category of categoryList | async; track $index) {
-                    @if(category.status) {
-                        <option [value]="category.name">{{ category.name }}</option>
+                    @if(category.status == true) {
+                    <option [value]="category.name">{{ category.name }}</option>
                     }
                     }
                 </select>
@@ -63,7 +64,7 @@
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ product.productName }} | {{product.category}}</h5>
-                        <p class="card-text">{{ product.description }}</p>
+                        <!-- <p class="card-text">{{ product.description }}</p> -->
                         <!-- View Product Modal Button -->
                         <button type="button" class="btn btn-primary" (click)="viewProductDetails(product)"
                             data-bs-toggle="modal" data-bs-target="#viewProductModal">View More...</button>

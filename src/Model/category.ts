@@ -1,6 +1,5 @@
 export interface Category {
-    id?: string; // Add optional id for existing products
-    name: string;
-    status: boolean;
-  }
-  
+  id?: string; // Add optional id for existing products
+  name: string;
+  status: boolean;
+}

@@ -172,11 +172,17 @@ export class ProductService {
     return runInInjectionContext(this.injector, callback);
   }
 
-  searchProducts(searchTerm: string, products$: Observable<Product[]>): Observable<Product[]> {
+  searchProducts(
+    searchTerm: string,
+    products$: Observable<Product[]>
+  ): Observable<Product[]> {
     return products$.pipe(
       map((products) =>
         products.filter((product) => {
-          const searchFields = [product.productName, product.description].filter(Boolean).join(' ').toLowerCase(); // Adjust fields as needed
+          const searchFields = [product.productName, product.description]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase(); // Adjust fields as needed
           const lowerSearchTerm = searchTerm.toLowerCase();
           return searchFields.includes(lowerSearchTerm);
         })
@@ -184,11 +190,17 @@ export class ProductService {
     );
   }
 
-  searchProductsByCategory(searchTerm: string, products$: Observable<Product[]>): Observable<Product[]> {
+  searchProductsByCategory(
+    searchTerm: string,
+    products$: Observable<Product[]>
+  ): Observable<Product[]> {
     return products$.pipe(
       map((products) =>
         products.filter((product) => {
-          const searchFields = [product.category].filter(Boolean).join(' ').toLowerCase(); // Adjust fields as needed
+          const searchFields = [product.category]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase(); // Adjust fields as needed
           const lowerSearchTerm = searchTerm.toLowerCase();
           return searchFields.includes(lowerSearchTerm);
         })

@@ -35,11 +35,20 @@ export class LoginComponent {
     this.registerEmail = this.registerEmail.trim();
     this.registerPassword = this.registerPassword.trim();
     this.registerPhoneNumber = this.registerPhoneNumber.trim();
-    if (!this.registerEmail || !this.registerPassword || !this.registerPhoneNumber) {
+    if (
+      !this.registerEmail ||
+      !this.registerPassword ||
+      !this.registerPhoneNumber
+    ) {
       this.registerError = 'Email, Phone Number and password are required.';
       return;
     }
-    if (!await this.checkAllowedUser(this.registerEmail, this.registerPhoneNumber)) {
+    if (
+      !(await this.checkAllowedUser(
+        this.registerEmail,
+        this.registerPhoneNumber
+      ))
+    ) {
       this.registerError = 'Invalid Details.';
       return;
     }
@@ -60,8 +69,11 @@ export class LoginComponent {
     }
   }
 
-  async checkAllowedUser(emailID: string, phoneNumber: string): Promise<boolean> {
-     return await this.authService.checkAllowedUser(emailID, phoneNumber);
+  async checkAllowedUser(
+    emailID: string,
+    phoneNumber: string
+  ): Promise<boolean> {
+    return await this.authService.checkAllowedUser(emailID, phoneNumber);
   }
 
   async login() {
@@ -73,10 +85,12 @@ export class LoginComponent {
       this.loginError = 'Email, Phone Number and Password are required.';
       return;
     }
-    if (!await this.checkAllowedUser(this.loginEmail, this.loginPhoneNumber)) {
+    if (
+      !(await this.checkAllowedUser(this.loginEmail, this.loginPhoneNumber))
+    ) {
       this.loginError = 'Invalid Details.';
       return;
-    } 
+    }
     try {
       await this.authService.login(this.loginEmail, this.loginPassword);
       this.router.navigate(['/home']);
@@ -94,7 +108,12 @@ export class LoginComponent {
       this.resetPasswordError = 'Email and Phone Number are required.';
       return;
     }
-    if (!await this.checkAllowedUser(this.resetPasswordEmail, this.resetPhoneNumber)) {
+    if (
+      !(await this.checkAllowedUser(
+        this.resetPasswordEmail,
+        this.resetPhoneNumber
+      ))
+    ) {
       this.resetPasswordError = 'Invalid Details.';
       return;
     }

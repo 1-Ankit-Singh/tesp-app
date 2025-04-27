@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 import { Users } from '../Model/users';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersService {
   private firestore: Firestore = inject(Firestore); // Inject Firestore
@@ -30,7 +30,9 @@ export class UsersService {
 
   // Read (Get) all users
   getUsers(): Observable<Users[]> {
-    return collectionData(this.usersCollection, { idField: 'id' }) as Observable<Users[]>;
+    return collectionData(this.usersCollection, {
+      idField: 'id',
+    }) as Observable<Users[]>;
   }
 
   // Update a users

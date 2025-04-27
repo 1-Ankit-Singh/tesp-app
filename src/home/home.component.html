@@ -11,7 +11,7 @@
           (change)="onSearchCategory()">
           <option selected>Choose</option>
           @for (category of categoryList | async; track $index) {
-          @if (category.status) {
+          @if (category.status == true) {
           <option [value]="category.name">{{ category.name }}</option>
           }
           }
@@ -51,8 +51,42 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+            <div>
+              <input class="form-control mb-1" type="text" placeholder="Category Name" aria-label="Category Name"
+                [(ngModel)]="newCategory.name">
+              <select class="form-select mb-1" aria-label="Select Category Status" [(ngModel)]="newCategory.status">
+                <option selected>Choose Category Status</option>
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+              </select>
+              <button type="button" class="btn btn-primary" (click)="addNewCategory()">Add Category</button>
+            </div>
+            <hr />
             @for (category of categoryList | async; track $index) {
-            {{category.name}}
+            <div>
+              <!-- {{category.name}} | {{category.status == true ? 'Active' : 'Inactive'}}  -->
+              <input type="text" class="form-control me-2 mb-1" placeholder="Replace Category Name"
+                aria-label="Replace Category Name" [(ngModel)]="category.name"
+                [disabled]="editingCategory !== category.id">
+              <select class="form-select me-2 mb-1" aria-label="Select Category Status" [(ngModel)]="category.status"
+                [disabled]="editingCategory !== category.id">
+                <option selected>Choose Category Status</option>
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+              </select>
+              <input type="button" class="btn btn-danger me-2 mb-1" (click)="deleteCategory(category.id!)"
+                value="Delete Category">
+              @if (editingCategory === category.id) {
+              <input type="button" class="btn btn-primary me-2 mb-1" (click)="cancelEditCategory()"
+                value="Cancel Update">
+              <input type="button" class="btn btn-primary me-2 mb-1" (click)="updateCategory(category)"
+                value="Update Category">
+              }
+              @if (editingCategory !== category.id) {
+              <input type="button" class="btn btn-primary me-2 mb-1" (click)="editCategory(category.id!)"
+                value="Edit Category">
+              }
+            </div>
             }
           </div>
         </div>
@@ -69,8 +103,31 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+            <div>
+              <input class="form-control mb-1" type="email" placeholder="User Email ID" aria-label="User Email ID"
+                [(ngModel)]="newUser.emailID">
+              <input class="form-control mb-1" type="tel" placeholder="User Phone Number" aria-label="User Phone Number"
+                [(ngModel)]="newUser.phoneNumber">
+              <button type="button" class="btn btn-primary" (click)="addNewUser()">Add User</button>
+            </div>
+            <hr />
             @for (user of userList | async; track $index) {
-            {{user.emailID}}
+            <div>
+              <!-- {{user.emailID}} | {{user.phoneNumber}} -->
+              <input type="text" class="form-control me-2 mb-1" placeholder="Replace User Email ID"
+                aria-label="Replace User Email ID" [(ngModel)]="user.emailID" [disabled]="editingUser !== user.id">
+              <input type="text" class="form-control me-2 mb-1" placeholder="Replace User Phone Number"
+                aria-label="Replace User Phone Number" [(ngModel)]="user.phoneNumber"
+                [disabled]="editingUser !== user.id">
+              <input type="button" class="btn btn-danger me-2 mb-1" (click)="deleteUser(user.id!)" value="Delete User">
+              @if (editingUser === user.id) {
+              <input type="button" class="btn btn-primary me-2 mb-1" (click)="cancelEditUser()" value="Cancel Update">
+              <input type="button" class="btn btn-primary me-2 mb-1" (click)="updateUser(user)" value="Update User">
+              }
+              @if (editingUser !== user.id) {
+              <input type="button" class="btn btn-primary me-2 mb-1" (click)="editUser(user.id!)" value="Edit User">
+              }
+            </div>
             }
           </div>
         </div>
@@ -170,7 +227,7 @@
             </div>
             <div class="card-body">
               <h5 class="card-title">{{ product.productName }} | {{product.category}}</h5>
-              <p class="card-text">{{ product.description }}</p>
+              <!-- <p class="card-text">{{ product.description }}</p> -->
               <!-- View Product Modal Button -->
               <button type="button" class="btn btn-primary" (click)="viewProductDetails(product)" data-bs-toggle="modal"
                 data-bs-target="#viewProductModal">View More...</button>

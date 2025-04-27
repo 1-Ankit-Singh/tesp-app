@@ -19,7 +19,12 @@ import { Users } from '../Model/users';
 })
 export class HomeComponent {
   products!: Observable<Product[]>;
-  newProduct: Product = { productName: '', description: '', category: '', images: [] };
+  newProduct: Product = {
+    productName: '',
+    description: '',
+    category: '',
+    images: [],
+  };
   numberOfImages: number = 0;
   imageInputs: any[] = [];
   selectedFiles: File[] = [];
@@ -32,6 +37,10 @@ export class HomeComponent {
   searchCategory: string = 'Choose';
   categoryList!: Observable<Category[]>;
   userList!: Observable<Users[]>;
+  newCategory: Category = { name: '', status: true };
+  newUser: Users = { emailID: '', phoneNumber: '' };
+  editingCategory?: string;
+  editingUser?: string;
 
   constructor(
     private categoryService: CategoryService,
@@ -59,22 +68,84 @@ export class HomeComponent {
   }
 
   onSearch() {
-    if(this.searchTerm){
-      this.products = this.productService.searchProducts(this.searchTerm, this.products);
+    if (this.searchTerm) {
+      this.products = this.productService.searchProducts(
+        this.searchTerm,
+        this.products
+      );
     } else {
       this.products = this.productService.getProducts();
     }
   }
 
   onSearchCategory() {
-    if(this.searchCategory == 'Choose'){
+    if (this.searchCategory == 'Choose') {
       this.searchCategory = '';
     }
-    if(this.searchCategory){
-      this.products = this.productService.searchProductsByCategory(this.searchCategory, this.products);
+    if (this.searchCategory) {
+      this.products = this.productService.searchProductsByCategory(
+        this.searchCategory,
+        this.products
+      );
     } else {
       this.products = this.productService.getProducts();
     }
+  }
+
+  addNewCategory() {
+    this.categoryService.createCategory(this.newCategory).then(() => {
+      this.newCategory = { name: '', status: true };
+      this.initializeCategory();
+    });
+  }
+
+  editCategory(categoryID: string) {
+    this.editingCategory = categoryID;
+  }
+
+  cancelEditCategory() {
+    this.editingCategory = '';
+  }
+
+  updateCategory(category: Category) {
+    this.categoryService.updateCategory(category.id!, category).then(() => {
+      this.initializeCategory();
+      this.editingCategory = '';
+    });
+  }
+
+  deleteCategory(categoryID: string) {
+    this.categoryService.deleteCategory(categoryID).then(() => {
+      this.initializeCategory();
+    });
+  }
+
+  addNewUser() {
+    this.userService.createUser(this.newUser).then(() => {
+      this.newUser = { emailID: '', phoneNumber: '' };
+      this.initializeUser();
+    });
+  }
+
+  editUser(userID: string) {
+    this.editingUser = userID;
+  }
+
+  cancelEditUser() {
+    this.editingUser = '';
+  }
+
+  updateUser(user: Users) {
+    this.userService.updateUser(user.id!, user).then(() => {
+      this.initializeUser();
+      this.editingUser = '';
+    });
+  }
+
+  deleteUser(userId: string) {
+    this.userService.deleteUser(userId).then(() => {
+      this.initializeUser();
+    });
   }
 
   viewProductDetails(product: Product) {
@@ -100,7 +171,12 @@ export class HomeComponent {
       this.selectedFiles,
       this.imageSequences
     );
-    this.newProduct = { productName: '', description: '', category: '', images: [] };
+    this.newProduct = {
+      productName: '',
+      description: '',
+      category: '',
+      images: [],
+    };
     this.imageInputs = [];
     this.selectedFiles = [];
     this.imageSequences = [];

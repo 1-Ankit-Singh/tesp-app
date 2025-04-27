@@ -23,7 +23,7 @@ export class ProductComponent {
 
   constructor(
     private productService: ProductService,
-    private categoryService: CategoryService,
+    private categoryService: CategoryService
   ) {
     this.products = this.productService.getProducts();
     this.categoryList = this.categoryService.getCategories();
@@ -35,22 +35,27 @@ export class ProductComponent {
   }
 
   onSearch() {
-    if(this.searchTerm){
-      this.products = this.productService.searchProducts(this.searchTerm, this.products);
+    if (this.searchTerm) {
+      this.products = this.productService.searchProducts(
+        this.searchTerm,
+        this.products
+      );
     } else {
       this.products = this.productService.getProducts();
     }
   }
 
   onSearchCategory() {
-    if(this.searchCategory == 'Choose'){
+    if (this.searchCategory == 'Choose') {
       this.searchCategory = '';
     }
-    if(this.searchCategory){
-      this.products = this.productService.searchProductsByCategory(this.searchCategory, this.products);
+    if (this.searchCategory) {
+      this.products = this.productService.searchProductsByCategory(
+        this.searchCategory,
+        this.products
+      );
     } else {
       this.products = this.productService.getProducts();
     }
   }
-
 }
