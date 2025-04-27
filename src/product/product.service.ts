@@ -179,7 +179,7 @@ export class ProductService {
     return products$.pipe(
       map((products) =>
         products.filter((product) => {
-          const searchFields = [product.productName, product.description]
+          const searchFields = [product.productName]
             .filter(Boolean)
             .join(' ')
             .toLowerCase(); // Adjust fields as needed

@@ -78,13 +78,10 @@ export class HomeComponent {
   }
 
   onSearchCategory() {
-    if (this.searchCategory == 'Choose') {
-      this.searchCategory = '';
-    }
     this.products = this.productService.getProducts();
     if (this.searchCategory) {
       this.products = this.productService.searchProductsByCategory(
-        this.searchCategory,
+        this.searchCategory === 'Choose' ? '' : this.searchCategory,
         this.products
       );
     }
