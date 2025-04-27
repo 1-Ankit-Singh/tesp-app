@@ -146,8 +146,16 @@
           <div class="modal-body">
             <input class="form-control mb-1" type="text" placeholder="Product Name" aria-label="Product Name"
               [(ngModel)]="newProduct.productName">
-            <input class="form-control mb-1" type="text" placeholder="Product Category" aria-label="Product Category"
-              [(ngModel)]="newProduct.category">
+            <!-- <input class="form-control mb-1" type="text" placeholder="Product Category" aria-label="Product Category"
+              [(ngModel)]="newProduct.category"> -->
+              <select class="form-select mb-1" aria-label="Select Category" [(ngModel)]="newProduct.category">
+                <option selected disabled value="">Select Category</option>
+                @for (category of categoryList | async; track $index) {
+                @if (category.status == true) {
+                  <option [value]="category.name">{{ category.name }}</option>
+                }
+                }
+              </select>
             <textarea class="form-control mb-1" placeholder="Description" aria-label="Product Description"
               [(ngModel)]="newProduct.description"></textarea>
 
@@ -187,7 +195,7 @@
       <div class="input-group">
         <input type="text" class="form-control" id="search-input" placeholder="Search for products..."
           aria-label="Search" [(ngModel)]="searchTerm" (input)="onSearch()">
-        <button type="button" class="btn btn-outline-primary" (click)="onSearch()"><i class="bi bi-search"></i></button>
+        <button type="button" class="btn btn-outline-primary" (click)="onSearch()" value="Search"><i class="bi bi-search"></i></button>
       </div>
     </div>
 
@@ -255,8 +263,15 @@
           <div class="modal-body">
             <input type="text" class="form-control mb-1" aria-label="Product Name"
               [(ngModel)]="editingProduct.productName">
-            <input type="text" class="form-control mb-1" aria-label="Product Category"
-              [(ngModel)]="editingProduct.category">
+            <!-- <input type="text" class="form-control mb-1" aria-label="Product Category"
+              [(ngModel)]="editingProduct.category"> -->
+              <select class="form-select mb-1" aria-label="Select Category" [(ngModel)]="editingProduct.category">
+                @for (category of categoryList | async; track $index) {
+                @if (category.status == true) {
+                  <option [value]="category.name">{{ category.name }}</option>
+                }
+                }
+              </select>
             <textarea class="form-control mb-1" aria-label="Product Description"
               [(ngModel)]="editingProduct.description"></textarea>
             @for (img of editingProduct.images; track $index) {
