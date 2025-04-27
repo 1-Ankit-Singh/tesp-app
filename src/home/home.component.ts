@@ -68,13 +68,12 @@ export class HomeComponent {
   }
 
   onSearch() {
+    this.products = this.productService.getProducts();
     if (this.searchTerm) {
       this.products = this.productService.searchProducts(
         this.searchTerm,
         this.products
       );
-    } else {
-      this.products = this.productService.getProducts();
     }
   }
 
@@ -82,13 +81,12 @@ export class HomeComponent {
     if (this.searchCategory == 'Choose') {
       this.searchCategory = '';
     }
+    this.products = this.productService.getProducts();
     if (this.searchCategory) {
       this.products = this.productService.searchProductsByCategory(
         this.searchCategory,
         this.products
       );
-    } else {
-      this.products = this.productService.getProducts();
     }
   }
 

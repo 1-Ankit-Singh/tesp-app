@@ -63,7 +63,7 @@
             </div>
             <hr />
             @for (category of categoryList | async; track $index) {
-            <div>
+            <div class="custom-yellow-card">
               <!-- {{category.name}} | {{category.status == true ? 'Active' : 'Inactive'}}  -->
               <input type="text" class="form-control me-2 mb-1" placeholder="Replace Category Name"
                 aria-label="Replace Category Name" [(ngModel)]="category.name"
@@ -112,7 +112,7 @@
             </div>
             <hr />
             @for (user of userList | async; track $index) {
-            <div>
+            <div class="custom-yellow-card">
               <!-- {{user.emailID}} | {{user.phoneNumber}} -->
               <input type="text" class="form-control me-2 mb-1" placeholder="Replace User Email ID"
                 aria-label="Replace User Email ID" [(ngModel)]="user.emailID" [disabled]="editingUser !== user.id">
