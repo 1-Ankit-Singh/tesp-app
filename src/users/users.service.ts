@@ -15,7 +15,7 @@ import { Users } from '../Model/users';
   providedIn: 'root',
 })
 export class UsersService {
-  private firestore: Firestore = inject(Firestore); // Inject Firestore
+  private firestore: Firestore = inject(Firestore);
   private usersCollection = collection(this.firestore, 'allowedUsers');
 
   // Create (Add) a new users

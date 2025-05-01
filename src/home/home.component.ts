@@ -54,7 +54,11 @@ export class HomeComponent {
   ) {
     this.products = this.productService.getProducts();
     this.categoryList = this.categoryService.getCategories();
-  } // Inject the service
+  }
+
+  paginateProducts(productList: Observable<Product[]>) {
+    
+  }
 
   initializeCategory() {
     this.categoryList = this.categoryService.getCategories();

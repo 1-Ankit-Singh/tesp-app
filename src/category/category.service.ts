@@ -15,7 +15,7 @@ import { Category } from '../Model/category';
   providedIn: 'root',
 })
 export class CategoryService {
-  private firestore: Firestore = inject(Firestore); // Inject Firestore
+  private firestore: Firestore = inject(Firestore);
   private categoriesCollection = collection(this.firestore, 'category');
 
   // Create (Add) a new category
