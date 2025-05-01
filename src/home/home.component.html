@@ -44,7 +44,7 @@
     <!-- Manage Category Modal -->
     <div class="modal fade" id="manageCategoryModal" tabindex="-1" aria-labelledby="manageCategoryModalLabel"
       aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title text-primary fs-5" id="manageCategoryModalLabel">Manage Category</h1>
@@ -52,10 +52,13 @@
           </div>
           <div class="modal-body">
             <div>
-              <input class="form-control mb-1" type="text" placeholder="Category Name" aria-label="Category Name"
-                [(ngModel)]="newCategory.name">
-              <select class="form-select mb-1" aria-label="Select Category Status" [(ngModel)]="newCategory.status">
-                <option selected>Choose Category Status</option>
+              <label for="addCategoryName" class="form-label text-dark">Category Name</label>
+              <input id="addCategoryName" class="form-control mb-2" type="text" placeholder="Category Name"
+                aria-label="Category Name" [(ngModel)]="newCategory.name">
+              <label for="addCategoryStatus" class="form-label text-dark">Category Status</label>
+              <select id="addCategoryStatus" class="form-select mb-2" aria-label="Select Category Status"
+                [(ngModel)]="newCategory.status">
+                <!-- <option selected>Choose Category Status</option> -->
                 <option value="true">Active</option>
                 <option value="false">Inactive</option>
               </select>
@@ -64,11 +67,13 @@
             <hr />
             @for (category of categoryList | async; track $index) {
             <div class="custom-yellow-card">
-              <!-- {{category.name}} | {{category.status == true ? 'Active' : 'Inactive'}}  -->
-              <input type="text" class="form-control me-2 mb-1" placeholder="Replace Category Name"
-                aria-label="Replace Category Name" [(ngModel)]="category.name"
+              <label for="replaceCategoryName${{$index}}" class="form-label text-dark">Category Name</label>
+              <input id="replaceCategoryName${{$index}}" type="text" class="form-control me-2 mb-2"
+                placeholder="Replace Category Name" aria-label="Replace Category Name" [(ngModel)]="category.name"
                 [disabled]="editingCategory !== category.id">
-              <select class="form-select me-2 mb-1" aria-label="Select Category Status" [(ngModel)]="category.status"
+              <label for="replaceCategoryStatus${{$index}}" class="form-label text-dark">Category Status</label>
+              <select id="replaceCategoryStatus${{$index}}" class="form-select me-2 mb-2"
+                aria-label="Select Category Status" [(ngModel)]="category.status"
                 [disabled]="editingCategory !== category.id">
                 <option selected>Choose Category Status</option>
                 <option value="true">Active</option>
@@ -96,7 +101,7 @@
     <!-- Manage User Modal -->
     <div class="modal fade" id="manageUserModal" tabindex="-1" aria-labelledby="manageUserModalLabel"
       aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title text-primary fs-5" id="manageUserModalLabel">Manage User</h1>
@@ -104,21 +109,25 @@
           </div>
           <div class="modal-body">
             <div>
-              <input class="form-control mb-1" type="email" placeholder="User Email ID" aria-label="User Email ID"
-                [(ngModel)]="newUser.emailID">
-              <input class="form-control mb-1" type="tel" placeholder="User Phone Number" aria-label="User Phone Number"
-                [(ngModel)]="newUser.phoneNumber">
+              <label for="addUserEmail" class="form-label text-dark">Email Address</label>
+              <input id="addUserEmail" class="form-control mb-2" type="email" placeholder="User Email ID"
+                aria-label="User Email ID" [(ngModel)]="newUser.emailID">
+              <label for="addUserPhoneNumber" class="form-label text-dark">Phone Number</label>
+              <input id="addUserPhoneNumber" class="form-control mb-2" type="tel" placeholder="User Phone Number"
+                aria-label="User Phone Number" [(ngModel)]="newUser.phoneNumber">
               <button type="button" class="btn btn-primary" (click)="addNewUser()">Add User</button>
             </div>
             <hr />
             @for (user of userList | async; track $index) {
             <div class="custom-yellow-card">
-              <!-- {{user.emailID}} | {{user.phoneNumber}} -->
-              <input type="text" class="form-control me-2 mb-1" placeholder="Replace User Email ID"
-                aria-label="Replace User Email ID" [(ngModel)]="user.emailID" [disabled]="editingUser !== user.id">
-              <input type="text" class="form-control me-2 mb-1" placeholder="Replace User Phone Number"
-                aria-label="Replace User Phone Number" [(ngModel)]="user.phoneNumber"
+              <label for="updateUserEmail${{$index}}" class="form-label text-dark">Email Address</label>
+              <input id="updateUserEmail${{$index}}" type="text" class="form-control me-2 mb-2"
+                placeholder="Update User Email ID" aria-label="Update User Email ID" [(ngModel)]="user.emailID"
                 [disabled]="editingUser !== user.id">
+              <label for="updateUserPhoneNumber${{$index}}" class="form-label text-dark">Phone Number</label>
+              <input id="updateUserPhoneNumber${{$index}}" type="text" class="form-control me-2 mb-2"
+                placeholder="Update User Phone Number" aria-label="Update User Phone Number"
+                [(ngModel)]="user.phoneNumber" [disabled]="editingUser !== user.id">
               <input type="button" class="btn btn-danger me-2 mb-1" (click)="deleteUser(user.id!)" value="Delete User">
               @if (editingUser === user.id) {
               <input type="button" class="btn btn-primary me-2 mb-1" (click)="cancelEditUser()" value="Cancel Update">
@@ -144,36 +153,37 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <input class="form-control mb-1" type="text" placeholder="Product Name" aria-label="Product Name"
-              [(ngModel)]="newProduct.productName">
-            <!-- <input class="form-control mb-1" type="text" placeholder="Product Category" aria-label="Product Category"
-              [(ngModel)]="newProduct.category"> -->
-              <select class="form-select mb-1" aria-label="Select Category" [(ngModel)]="newProduct.category">
-                <option selected disabled value="">Select Category</option>
-                @for (category of categoryList | async; track $index) {
-                @if (category.status == true) {
-                  <option [value]="category.name">{{ category.name }}</option>
-                }
-                }
-              </select>
-            <textarea class="form-control mb-1" placeholder="Description" aria-label="Product Description"
-              [(ngModel)]="newProduct.description"></textarea>
-
-            <input class="form-control mb-1" type="number" placeholder="Number of Images" aria-label="Number of Images"
-              [(ngModel)]="numberOfImages">
+            <label for="productName" class="form-label text-dark">Product Name</label>
+            <input id="productName" class="form-control mb-2" type="text" placeholder="Product Name"
+              aria-label="Product Name" [(ngModel)]="newProduct.productName">
+            <label for="productCategory" class="form-label text-dark">Product Category</label>
+            <select id="productCategory" class="form-select mb-2" aria-label="Select Category"
+              [(ngModel)]="newProduct.category">
+              <option selected disabled value="">Select Category</option>
+              @for (category of categoryList | async; track $index) {
+              @if (category.status == true) {
+              <option [value]="category.name">{{ category.name }}</option>
+              }
+              }
+            </select>
+            <label for="productDescription" class="form-label text-dark">Product Description</label>
+            <textarea id="productDescription" class="form-control mb-2" placeholder="Description"
+              aria-label="Product Description" [(ngModel)]="newProduct.description"></textarea>
+            <label for="productImageCount" class="form-label text-dark">Product Images</label>
+            <input id="productImageCount" class="form-control mb-2" type="number" placeholder="Number of Images"
+              aria-label="Number of Images" [(ngModel)]="numberOfImages">
             <button type="button" class="btn btn-primary" (click)="prepareImageInputs()">Prepare Image Inputs</button>
             @if (imageInputs.length > 0) {
             <div>
               <h4 class="text-center">Add Images</h4>
               @for (input of imageInputs; track $index) {
               <div>
-                <input class="form-control mb-1" type="file" aria-label="Upload File"
+                <label for="imageInput{{$index}}" class="form-label text-dark">Upload Image {{$index + 1}}</label>
+                <input id="imageInput{{$index}}" class="form-control mb-2" type="file" aria-label="Upload Image"
                   (change)="onFileSelected($index, $event)">
-                <!-- @if (selectedFiles[$index]) {
-                <span>Selected: {{ selectedFiles[$index].name }}</span>
-                } -->
-                <input class="form-control mb-1" type="number" placeholder="Image Sequence" aria-label="Image Sequence"
-                  [(ngModel)]="imageSequences[$index]">
+                <!-- <label for="imageSequence{{$index}}" class="form-label text-dark">Enter Image Sequence</label>
+                <input id="imageSequence{{$index}}" class="form-control mb-2" type="number" placeholder="Image Sequence" aria-label="Image Sequence"
+                  [(ngModel)]="imageSequences[$index]"> -->
               </div>
               }
             </div>
@@ -195,7 +205,8 @@
       <div class="input-group">
         <input type="text" class="form-control" id="search-input" placeholder="Search for products..."
           aria-label="Search" [(ngModel)]="searchTerm" (input)="onSearch()">
-        <button type="button" class="btn btn-outline-primary" (click)="onSearch()" value="Search"><i class="bi bi-search"></i></button>
+        <button type="button" class="btn btn-outline-primary" (click)="onSearch()" value="Search" title="Search"><i
+            class="bi bi-search"></i></button>
       </div>
     </div>
 
@@ -261,30 +272,29 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <input type="text" class="form-control mb-1" aria-label="Product Name"
+            <label for="editProductName" class="form-label text-dark">Product Name</label>
+            <input id="editProductName" type="text" class="form-control mb-2" aria-label="Product Name"
               [(ngModel)]="editingProduct.productName">
-            <!-- <input type="text" class="form-control mb-1" aria-label="Product Category"
-              [(ngModel)]="editingProduct.category"> -->
-              <select class="form-select mb-1" aria-label="Select Category" [(ngModel)]="editingProduct.category">
-                @for (category of categoryList | async; track $index) {
-                @if (category.status == true) {
-                  <option [value]="category.name">{{ category.name }}</option>
-                }
-                }
-              </select>
-            <textarea class="form-control mb-1" aria-label="Product Description"
+            <label for="editProductCategory" class="form-label text-dark">Product Category</label>
+            <select id="editProductCategory" class="form-select mb-2" aria-label="Select Category"
+              [(ngModel)]="editingProduct.category">
+              @for (category of categoryList | async; track $index) {
+              @if (category.status == true) {
+              <option [value]="category.name">{{ category.name }}</option>
+              }
+              }
+            </select>
+            <label for="editProductDescription" class="form-label text-dark">Product Description</label>
+            <textarea id="editProductDescription" class="form-control mb-2" aria-label="Product Description"
               [(ngModel)]="editingProduct.description"></textarea>
-            @for (img of editingProduct.images; track $index) {
-            <div>
-              <div class="d-flex justify-content-center align-items-center mb-1">
-                <div class="image-container">
-                  <img [src]="img" class="contained-image" alt="Product Image {{ $index + 1 }}">
-                </div>
+            <span class="text-dark">Product Images</span>
+            <div class="d-flex justify-content-center align-items-center mb-1 flex-wrap">
+              @for (img of editingProduct.images; track $index) {
+              <div class="image-container p-2">
+                <img [src]="img" class="contained-image" alt="Product Image {{ $index + 1 }}">
               </div>
-              <input type="text" class="form-control mb-1" placeholder="Replace Image URL"
-                aria-label="Replace Image URL" [(ngModel)]="editingImageUrls[$index]">
+              }
             </div>
-            }
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelEdit()">Cancel
@@ -301,7 +311,7 @@
     <div class="custom-full-screen-modal">
       <div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
+        <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title text-primary fs-5" id="viewProductModalLabel">Product Details</h1>

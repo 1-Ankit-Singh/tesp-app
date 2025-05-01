@@ -30,7 +30,6 @@ export class HomeComponent {
   selectedFiles: File[] = [];
   imageSequences: number[] = [];
   editingProduct: Product | null = null;
-  editingImageUrls: string[] = [];
   productDetails!: Product;
   showViewProductDetails: boolean = false;
   searchTerm!: string;
@@ -88,6 +87,10 @@ export class HomeComponent {
   }
 
   addNewCategory() {
+    if (!this.newCategory.name) {
+      alert('Please fill in all fields');
+      return;
+    }
     this.categoryService.createCategory(this.newCategory).then(() => {
       this.newCategory = { name: '', status: true };
       this.initializeCategory();
@@ -103,6 +106,10 @@ export class HomeComponent {
   }
 
   updateCategory(category: Category) {
+    if (!category.name) {
+      alert('Please fill in all fields');
+      return;
+    }
     this.categoryService.updateCategory(category.id!, category).then(() => {
       this.initializeCategory();
       this.editingCategory = '';
@@ -116,6 +123,10 @@ export class HomeComponent {
   }
 
   addNewUser() {
+    if (!this.newUser.emailID || !this.newUser.phoneNumber) {
+      alert('Please fill in all fields');
+      return;
+    }
     this.userService.createUser(this.newUser).then(() => {
       this.newUser = { emailID: '', phoneNumber: '' };
       this.initializeUser();
@@ -131,6 +142,10 @@ export class HomeComponent {
   }
 
   updateUser(user: Users) {
+    if (!user.emailID || !user.phoneNumber) {
+      alert('Please fill in all fields');
+      return;
+    }
     this.userService.updateUser(user.id!, user).then(() => {
       this.initializeUser();
       this.editingUser = '';
@@ -161,6 +176,29 @@ export class HomeComponent {
   }
 
   async addProduct() {
+    if (
+      !this.newProduct.productName ||
+      !this.newProduct.description ||
+      !this.newProduct.category ||
+      this.selectedFiles.length < 1
+    ) {
+      alert('Please fill in all fields and select images');
+      return;
+    }
+    var selectedFilesCount = 0;
+    this.selectedFiles.forEach((file) => {
+      if (file) {
+        selectedFilesCount += 1;
+      }
+    });
+    if (selectedFilesCount !== this.numberOfImages) {
+      alert('Please select the correct number of images');
+      return;
+    }
+    if (this.selectedFiles.some((file) => !file.type.startsWith('image/'))) {
+      alert('Only image files are allowed');
+      return;
+    }
     await this.productService.addProduct(
       this.newProduct,
       this.selectedFiles,
@@ -184,22 +222,24 @@ export class HomeComponent {
 
   editProduct(product: Product) {
     this.editingProduct = { ...product };
-    this.editingImageUrls = [...product.images];
   }
 
   async updateProduct() {
+    if (
+      !this.editingProduct?.productName ||
+      !this.editingProduct?.description ||
+      !this.editingProduct?.category
+    ) {
+      alert('Please fill in all fields');
+      return;
+    }
     if (this.editingProduct) {
-      await this.productService.updateProduct(
-        this.editingProduct,
-        this.editingImageUrls
-      );
+      await this.productService.updateProduct(this.editingProduct);
       this.editingProduct = null;
-      this.editingImageUrls = [];
     }
   }
 
   cancelEdit() {
     this.editingProduct = null;
-    this.editingImageUrls = [];
   }
 }

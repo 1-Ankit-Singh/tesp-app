@@ -110,14 +110,14 @@ export class ProductService {
     });
   }
 
-  async updateProduct(product: Product, imageUrls: string[]): Promise<void> {
+  async updateProduct(product: Product): Promise<void> {
     if (product.id) {
       await this.runInContext(() =>
         updateDoc(doc(this.productsCollection, product.id), {
           productName: product.productName,
           description: product.description,
           category: product.category,
-          images: imageUrls,
+          images: product.images,
         })
       );
     }

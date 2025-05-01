@@ -24,7 +24,7 @@
         <div class="input-group">
             <input type="text" class="form-control" id="search-input" placeholder="Search for products..."
                 aria-label="Search" [(ngModel)]="searchTerm" (input)="onSearch()">
-            <button type="button" class="btn btn-outline-primary" (click)="onSearch()" value="Search"><i
+            <button type="button" class="btn btn-outline-primary" (click)="onSearch()" value="Search" title="Search"><i
                     class="bi bi-search"></i></button>
         </div>
     </div>
@@ -78,7 +78,7 @@
     <div class="custom-full-screen-modal">
         <div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen">
+            <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title text-primary fs-5" id="viewProductModalLabel">Product Details</h1>
