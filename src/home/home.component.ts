@@ -56,10 +56,6 @@ export class HomeComponent {
     this.categoryList = this.categoryService.getCategories();
   }
 
-  paginateProducts(productList: Observable<Product[]>) {
-    
-  }
-
   initializeCategory() {
     this.categoryList = this.categoryService.getCategories();
   }
