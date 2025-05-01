@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  importProvidersFrom,
   inject,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -21,11 +22,27 @@ import { provideAuth } from '@angular/fire/auth';
 import { getAuth } from 'firebase/auth';
 import { environment } from '../environments/environment';
 import { initializeAppCheck } from 'firebase/app-check';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { provideToastr } from 'ngx-toastr';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 const firebaseConfig = environment.firebaseConfig;
 
+export const TOASTR_TIME_OUT = 10000; // 10 seconds
+export const TOASTR_POSITION_CLASS = 'toast-bottom-right'; // Position of the toast
+
 export const appConfig: ApplicationConfig = {
   providers: [
+    importProvidersFrom(NgxSpinnerModule),
+    provideToastr({
+      timeOut: TOASTR_TIME_OUT,
+      positionClass: TOASTR_POSITION_CLASS,
+      preventDuplicates: true,
+      closeButton: true,
+      progressBar: true,
+      newestOnTop: true,
+    }),
+    provideAnimations(), 
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),

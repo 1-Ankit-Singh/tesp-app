@@ -10,6 +10,8 @@ import { CategoryService } from '../category/category.service';
 import { UsersService } from '../users/users.service';
 import { Category } from '../Model/category';
 import { Users } from '../Model/users';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
@@ -46,7 +48,9 @@ export class HomeComponent {
     private userService: UsersService,
     private productService: ProductService,
     public authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) {
     this.products = this.productService.getProducts();
     this.categoryList = this.categoryService.getCategories();
@@ -87,13 +91,17 @@ export class HomeComponent {
   }
 
   addNewCategory() {
+    this.spinner.show();
     if (!this.newCategory.name) {
-      alert('Please fill in all fields');
+      this.toastr.error('Please fill in all fields', 'Error');
+      this.spinner.hide();
       return;
     }
     this.categoryService.createCategory(this.newCategory).then(() => {
       this.newCategory = { name: '', status: true };
       this.initializeCategory();
+      this.toastr.success('Category added successfully', 'Success');
+      this.spinner.hide();
     });
   }
 
@@ -103,33 +111,45 @@ export class HomeComponent {
 
   cancelEditCategory() {
     this.editingCategory = '';
+    this.initializeCategory();
   }
 
   updateCategory(category: Category) {
+    this.spinner.show();
     if (!category.name) {
-      alert('Please fill in all fields');
+      this.toastr.error('Please fill in all fields', 'Error');
+      this.spinner.hide();
       return;
     }
     this.categoryService.updateCategory(category.id!, category).then(() => {
       this.initializeCategory();
+      this.toastr.success('Category updated successfully', 'Success');
+      this.spinner.hide();
       this.editingCategory = '';
     });
   }
 
   deleteCategory(categoryID: string) {
+    this.spinner.show();
     this.categoryService.deleteCategory(categoryID).then(() => {
       this.initializeCategory();
+      this.toastr.success('Category deleted successfully', 'Success');
+      this.spinner.hide();
     });
   }
 
   addNewUser() {
+    this.spinner.show();
     if (!this.newUser.emailID || !this.newUser.phoneNumber) {
-      alert('Please fill in all fields');
+      this.toastr.error('Please fill in all fields', 'Error');
+      this.spinner.hide();
       return;
     }
     this.userService.createUser(this.newUser).then(() => {
       this.newUser = { emailID: '', phoneNumber: '' };
       this.initializeUser();
+      this.toastr.success('User added successfully', 'Success');
+      this.spinner.hide();
     });
   }
 
@@ -139,22 +159,30 @@ export class HomeComponent {
 
   cancelEditUser() {
     this.editingUser = '';
+    this.initializeUser();
   }
 
   updateUser(user: Users) {
+    this.spinner.show();
     if (!user.emailID || !user.phoneNumber) {
-      alert('Please fill in all fields');
+      this.toastr.error('Please fill in all fields', 'Error');
+      this.spinner.hide();
       return;
     }
     this.userService.updateUser(user.id!, user).then(() => {
       this.initializeUser();
+      this.toastr.success('User updated successfully', 'Success');
+      this.spinner.hide();
       this.editingUser = '';
     });
   }
 
   deleteUser(userId: string) {
+    this.spinner.show();
     this.userService.deleteUser(userId).then(() => {
       this.initializeUser();
+      this.toastr.success('User deleted successfully', 'Success');
+      this.spinner.hide();
     });
   }
 
@@ -176,13 +204,15 @@ export class HomeComponent {
   }
 
   async addProduct() {
+    this.spinner.show();
     if (
       !this.newProduct.productName ||
       !this.newProduct.description ||
       !this.newProduct.category ||
       this.selectedFiles.length < 1
     ) {
-      alert('Please fill in all fields and select images');
+      this.toastr.error('Please fill in all fields and select images',  'Error');
+      this.spinner.hide();
       return;
     }
     var selectedFilesCount = 0;
@@ -192,11 +222,13 @@ export class HomeComponent {
       }
     });
     if (selectedFilesCount !== this.numberOfImages) {
-      alert('Please select the correct number of images');
+      this.toastr.error('Please select the correct number of images', 'Error');
+      this.spinner.hide();
       return;
     }
     if (this.selectedFiles.some((file) => !file.type.startsWith('image/'))) {
-      alert('Only image files are allowed');
+      this.toastr.error('Only image files are allowed', 'Error');
+      this.spinner.hide();
       return;
     }
     await this.productService.addProduct(
@@ -204,6 +236,8 @@ export class HomeComponent {
       this.selectedFiles,
       this.imageSequences
     );
+    this.toastr.success('Product added successfully', 'Success');
+    this.spinner.hide();
     this.newProduct = {
       productName: '',
       description: '',
@@ -217,7 +251,10 @@ export class HomeComponent {
   }
 
   deleteProduct(id: string) {
+    this.spinner.show();
     this.productService.deleteProduct(id);
+    this.toastr.success('Product deleted successfully', 'Success');
+    this.spinner.hide();
   }
 
   editProduct(product: Product) {
@@ -225,16 +262,20 @@ export class HomeComponent {
   }
 
   async updateProduct() {
+    this.spinner.show();
     if (
       !this.editingProduct?.productName ||
       !this.editingProduct?.description ||
       !this.editingProduct?.category
     ) {
-      alert('Please fill in all fields');
+      this.toastr.error('Please fill in all fields', 'Error');
+      this.spinner.hide();
       return;
     }
     if (this.editingProduct) {
       await this.productService.updateProduct(this.editingProduct);
+      this.toastr.success('Product updated successfully', 'Success');
+      this.spinner.hide();
       this.editingProduct = null;
     }
   }
