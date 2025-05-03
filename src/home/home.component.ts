@@ -20,7 +20,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  products!: Observable<Product[]>;
+  paginatedProducts!: Product[];
   newProduct: Product = {
     productName: '',
     description: '',
@@ -42,6 +42,15 @@ export class HomeComponent {
   newUser: Users = { emailID: '', phoneNumber: '' };
   editingCategory?: string;
   editingUser?: string;
+  pageSize: number = 20;
+  pageSizeOptions: number[] = [10, 20, 30, 40, 50];
+  totalProducts: number = 0;
+  currentPage: number = 1;
+  pageNumbers: number[] = [];
+  startIndex: number = 0;
+  endIndex: number = 0;
+  firstPageNumber: number = 1;
+  showStartIndex: number = 0;
 
   constructor(
     private categoryService: CategoryService,
@@ -52,8 +61,46 @@ export class HomeComponent {
     private toastr: ToastrService,
     private spinner: NgxSpinnerService
   ) {
-    this.products = this.productService.getProducts();
+    //this.products = this.productService.getProducts();
+    this.paginateProducts(this.firstPageNumber);
     this.categoryList = this.categoryService.getCategories();
+  }
+
+  paginateProducts(pageNumber: number, products?: Product[]) {
+    this.startIndex = Number(pageNumber - 1) * Number(this.pageSize);
+    this.endIndex = Number(this.startIndex) + Number(this.pageSize);
+    this.showStartIndex = Number(this.startIndex) + 1;
+    if (products) {
+      this.getPaginetedProducts(pageNumber, products);
+    } else {
+      this.productService.getProducts().subscribe((products) => {
+        this.getPaginetedProducts(pageNumber, products);
+      });
+    }
+  }
+
+  getPaginetedProducts(pageNumber: number, products: Product[]) {
+    this.totalProducts = products.length;
+    this.pageNumbers = Array.from(
+      { length: Math.ceil(this.totalProducts / this.pageSize) },
+      (_, i) => i + 1
+    );
+    this.currentPage = pageNumber;
+    this.paginatedProducts = products.slice(this.startIndex, this.endIndex);
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.paginateProducts(this.currentPage);
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.pageNumbers.length) {
+      this.currentPage++;
+      this.paginateProducts(this.currentPage);
+    }
   }
 
   initializeCategory() {
@@ -71,23 +118,25 @@ export class HomeComponent {
   }
 
   onSearch() {
-    this.products = this.productService.getProducts();
-    if (this.searchTerm) {
-      this.products = this.productService.searchProducts(
-        this.searchTerm,
-        this.products
-      );
-    }
+    const products = this.productService.getProducts();
+    this.productService
+      .searchProducts(this.searchTerm, products)
+      .subscribe((products) => {
+        this.searchCategory = 'Choose';
+        this.paginateProducts(this.firstPageNumber, products);
+      });
   }
 
   onSearchCategory() {
-    this.products = this.productService.getProducts();
-    if (this.searchCategory) {
-      this.products = this.productService.searchProductsByCategory(
+    const products = this.productService.getProducts();
+    this.productService
+      .searchProductsByCategory(
         this.searchCategory === 'Choose' ? '' : this.searchCategory,
-        this.products
-      );
-    }
+        products
+      )
+      .subscribe((products) => {
+        this.paginateProducts(this.firstPageNumber, products);
+      });
   }
 
   addNewCategory() {
@@ -211,7 +260,7 @@ export class HomeComponent {
       !this.newProduct.category ||
       this.selectedFiles.length < 1
     ) {
-      this.toastr.error('Please fill in all fields and select images',  'Error');
+      this.toastr.error('Please fill in all fields and select images', 'Error');
       this.spinner.hide();
       return;
     }
@@ -236,6 +285,9 @@ export class HomeComponent {
       this.selectedFiles,
       this.imageSequences
     );
+    this.searchCategory = 'Choose';
+    this.paginateProducts(this.firstPageNumber);
+
     this.toastr.success('Product added successfully', 'Success');
     this.spinner.hide();
     this.newProduct = {
@@ -253,6 +305,8 @@ export class HomeComponent {
   deleteProduct(id: string) {
     this.spinner.show();
     this.productService.deleteProduct(id);
+    this.searchCategory = 'Choose';
+    this.paginateProducts(this.firstPageNumber);
     this.toastr.success('Product deleted successfully', 'Success');
     this.spinner.hide();
   }
@@ -274,6 +328,8 @@ export class HomeComponent {
     }
     if (this.editingProduct) {
       await this.productService.updateProduct(this.editingProduct);
+      this.searchCategory = 'Choose';
+      this.paginateProducts(this.firstPageNumber);
       this.toastr.success('Product updated successfully', 'Success');
       this.spinner.hide();
       this.editingProduct = null;

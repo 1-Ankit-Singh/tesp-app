@@ -28,10 +28,48 @@
                     class="bi bi-search"></i></button>
         </div>
     </div>
+    <!-- Pagination Controls -->
+    <div class="d-flex flex-wrap justify-content-between mt-2 me-5 ms-5">
+        <div class="d-flex justify-content-start align-items-center mt-2">
+            <span class="me-2">Showing</span>
+            <div>
+                <select id="itemPerPage" class="form-select" aria-label="Select Items Per Page" [(ngModel)]="pageSize"
+                    (change)="paginateProducts(firstPageNumber)">
+                    @for (item of pageSizeOptions; track $index) {
+                    <option [value]="item">{{ item }}</option>
+                    }
+                </select>
+            </div>
+            <span class="ms-2">Items Per Page</span>
+        </div>
+        <div class="d-flex justify-content-center align-items-center mt-2">
+            @if(showStartIndex == totalProducts) {
+            Showing {{totalProducts}}th product of {{ totalProducts }} products
+            }
+            @else {
+            Showing {{showStartIndex}} to {{endIndex > totalProducts ? totalProducts : endIndex}} of {{ totalProducts }}
+            products
+            }
+        </div>
+        <div class="d-flex justify-content-end align-items-center mt-2">
+            <button class="btn btn-primary" (click)="prevPage()" [disabled]="currentPage == 1">Previous</button>
+            <div class="me-4 ms-4">
+                <label for="page">Showing Page Number</label>
+                <select id="page" class="form-select" aria-label="Select Page" [(ngModel)]="currentPage"
+                    (change)="paginateProducts(currentPage)">
+                    @for (page of pageNumbers; track $index) {
+                    <option [value]="page">{{ page }}</option>
+                    }
+                </select>
+            </div>
+            <button class="btn btn-primary" (click)="nextPage()"
+                [disabled]="currentPage == pageNumbers[pageNumbers.length - 1]">Next</button>
+        </div>
+    </div>
     <!-- Product List -->
     <div class="d-flex justify-content-center align-items-center mb-4 me-5 ms-5">
         <ul class="p-4 list-unstyled d-flex flex-wrap gap-2 justify-content-center align-items-center">
-            @for (product of products | async; track $index) {
+            @for (product of paginatedProducts; track $index) {
             <li>
                 <div class="card" style="width: 18rem;">
                     <div id="carousel{{ $index }}" class="carousel slide">
@@ -120,7 +158,8 @@
                                 }
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">{{ productDetails.productName }} | {{productDetails.category}}</h5>
+                                <h5 class="card-title">{{ productDetails.productName }} | {{productDetails.category}}
+                                </h5>
                                 <p class="card-text">{{ productDetails.description }}</p>
                             </div>
                             }
